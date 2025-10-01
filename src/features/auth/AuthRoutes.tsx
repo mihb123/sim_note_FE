@@ -1,7 +1,9 @@
 import { Outlet, Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ThemeToggle from './components/ThemeToggle';
+import LoginPage from '@auth/pages/LoginPage';
+import RegisterPage from '@auth/pages/RegisterPage';
+import ThemeToggle from '@auth/components/ThemeToggle';
+import VerifiedPage from '@auth/pages/VerifiedPage';
+import VerificationPage from './pages/VerificationPage';
 
 function AuthLayout() {
   return (
@@ -20,6 +22,8 @@ export default function AuthRoutes() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/verified-success" element={<VerifiedPage />} />
+        <Route path="/verification" element={<VerificationPage />} />
       </Route>
     </Routes>
   );

@@ -8,6 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@features': path.resolve(__dirname, './src/features'), 
+      '@auth': path.resolve(__dirname, './src/features/auth'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 })

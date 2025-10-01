@@ -1,6 +1,7 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
-import { loginService, registerService } from '../api/authService';
-import type { LoginData, RegisterData } from "@features/auth/types";
+import { useState, type FormEvent, type ChangeEvent } from 'react';
+import { loginService, registerService } from '@auth/api/authService';
+import type { LoginData, RegisterData } from "@auth/types";
+import { useNavigate } from "react-router-dom";
 
 type FormType = 'login' | 'register';
 
@@ -14,6 +15,7 @@ const initialFields = {
 export const useAuthForm = (formType: FormType) => {
   const [fields, setFields] = useState(initialFields);
   const [errors, setErrors] = useState(initialFields);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,6 +24,8 @@ export const useAuthForm = (formType: FormType) => {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
+
+  const navigate = useNavigate();
 
   const validate = () => {
     const newErrors = { ...initialFields };
@@ -60,7 +64,7 @@ export const useAuthForm = (formType: FormType) => {
       setErrors(validationErrors);
       return;
     }
-
+    setIsLoading(true);
     setErrors(initialFields);
 
     let submissionData: LoginData | RegisterData;
@@ -73,13 +77,24 @@ export const useAuthForm = (formType: FormType) => {
     
     const submitAction = formType === 'register' ? registerService : loginService;
     submitAction(submissionData as any)
-      .then((response) => {
-        console.log('Success:', response);
+      .then((response: any) => {
+        if (response.token) {
+          localStorage.setItem('authToken', response.token);
+          if (formType === 'login') {
+            navigate('/');
+          } else {
+            alert(response.message);
+            navigate('/');
+          }
+        }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error('Error:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
-  return { fields, errors, handleChange, handleSubmit };
+  return { fields, errors, handleChange, handleSubmit, isLoading };
 };

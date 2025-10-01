@@ -1,10 +1,13 @@
-import { useAuthForm } from '../hooks/useAuthForm';
+import { useAuthForm } from '@auth/hooks/useAuthForm';
+import LoadingSpinner from '@auth/components/LoadingSpinner';
+import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
-  const { fields, errors, handleChange, handleSubmit } = useAuthForm('login');
+  const { fields, errors, handleChange, handleSubmit, isLoading } = useAuthForm('login');
 
   return (
     <div className="min-h-screen flex items-center justify-center">
+      {isLoading && <LoadingSpinner />}
       <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-6">
           Login Page
@@ -28,8 +31,9 @@ export default function LoginPage() {
           <div className="text-right mb-1">
             <a href="#" className="text-sm text-sky-600 hover:underline dark:text-sky-500">Forgot password?</a>
           </div>
-          <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 mt-4">Login
-          </button>         
+          <button type="submit" disabled={isLoading} className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 mt-4 disabled:opacity-50 disabled:cursor-not-allowed">
+            {isLoading ? 'Logging In...' : 'Login'}
+          </button>
         </form>
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -38,7 +42,7 @@ export default function LoginPage() {
         </div>
         <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
           Don't have an account?{' '}
-          <a href="/auth/register" className="font-medium text-sky-600 hover:underline dark:text-sky-500">Sign Up</a>
+          <Link to="/register" className="font-medium text-sky-600 hover:underline dark:text-sky-500">Sign Up</Link>
         </p>
       </div>
     </div>

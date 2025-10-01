@@ -1,12 +1,13 @@
-import { Route, Routes } from 'react-router-dom';
-import AuthRoutes from '@features/auth/AuthRoutes';
-
 export default function App() {
+  const Logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/auth/login';
+  };
+
   return (
-    <div className="App">    
-      <Routes>
-        <Route path="auth/*" element={<AuthRoutes />} />
-      </Routes>
-    </div>
+    <>
+      <h1>Welcome to SimNote</h1>
+      <button onClick={Logout} className='btn btn-primary hover:bg-blue-700 hover:text-white hover:cursor-pointer'>Logout</button>
+    </>
   );
 }
