@@ -1,6 +1,6 @@
 export default function App() {
   const Logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     window.location.href = '/auth/login';
   };
 

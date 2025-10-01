@@ -1,11 +1,9 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { loginService, registerService } from '@auth/api/authService';
-import type { LoginData, RegisterData } from "@auth/types";
+import type { LoginData, RegisterData, Fields, FormType} from "@auth/types";
 import { useNavigate } from "react-router-dom";
 
-type FormType = 'login' | 'register';
-
-const initialFields = {
+const initialFields: Fields = {
   email: '',
   password: '',
   name: '',
@@ -13,15 +11,15 @@ const initialFields = {
 };
 
 export const useAuthForm = (formType: FormType) => {
-  const [fields, setFields] = useState(initialFields);
-  const [errors, setErrors] = useState(initialFields);
-  const [isLoading, setIsLoading] = useState(false);
+  const [fields, setFields] = useState<Fields>(initialFields);
+  const [errors, setErrors] = useState<Fields>(initialFields);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFields((prev) => ({ ...prev, [name]: value }));
+    setFields((prev: Fields) => ({ ...prev, [name]: value }));
     if (errors[name as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
+      setErrors((prev: Fields) => ({ ...prev, [name]: '' }));
     }
   };
 

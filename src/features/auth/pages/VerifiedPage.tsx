@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function VerifiedPage() {
   const [searchParams] = useSearchParams();
   const isVerified = searchParams.get("verified") === "1";
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const sendVerificationEmail = () => {
     setIsLoading(true);
