@@ -1,12 +1,18 @@
-import { Route, Routes } from 'react-router-dom';
-import AuthRoutes from '@features/auth/AuthRoutes';
+import Sidebar from "./components/Sidebar/Sidebar";
+import NoteContent from "./components/NoteContent";
+import "@/styles//App.css";
+import { ThemeProvider } from "@/components/Toggle_theme/theme-provider";
+import { useUser } from '@/hooks/useUser';
 
 export default function App() {
+  useUser();
+
   return (
-    <div className="App">    
-      <Routes>
-        <Route path="auth/*" element={<AuthRoutes />} />
-      </Routes>
-    </div>
+    <ThemeProvider>
+      <main className="flex">
+        <Sidebar />
+        <NoteContent />
+      </main>
+    </ThemeProvider>
   );
 }

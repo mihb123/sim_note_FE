@@ -1,0 +1,14 @@
+.noteItem.selected {
+  background-color: #e5e5e5;
+  color: rgb(32, 32, 32);
+}
+
+.dark .noteItem.selected {
+  background-color: #3a3a3a;
+  color: rgb(255, 255, 255);
+}
+
+svg:hover {
+  color: var(--sidebar-foreground);
+  cursor: pointer;
+}

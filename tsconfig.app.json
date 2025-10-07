@@ -8,9 +8,10 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
     
-    "baseUrl": ".", 
     "paths": {
-      "@features/*": ["./src/features/*"] 
+      "@/*": [
+        "./src/*"
+      ]
     },
 
     /* Bundler mode */

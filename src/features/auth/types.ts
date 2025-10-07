@@ -14,3 +14,12 @@ export interface AuthResponse {
   message: string;
   token: string;
 }
+
+export interface Fields {
+  email: string;
+  password: string;
+  name?: string;
+  password_confirmation?: string;
+}
+
+export type FormType = 'login' | 'register';
