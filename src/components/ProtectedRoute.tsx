@@ -1,0 +1,11 @@
+import { Navigate } from 'react-router-dom';
+import type { ReactNode } from 'react';
+
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const token = localStorage.getItem('authToken');
+  if (!token) return <Navigate to="/auth/login" replace />;
+  return children;
+}

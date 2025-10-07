@@ -27,7 +27,7 @@ export default function ThemeToggle() {
   };
 
   return (
-    <button onClick={toggleTheme} className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
+    <button onClick={toggleTheme} className="themeIcon text-gray-500 dark:text-gray-400 hover:bg-gray-100 hover:cursor-pointer rounded-md p-1">
       {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
     </button>
   );

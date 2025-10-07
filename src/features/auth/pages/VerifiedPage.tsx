@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { FailureIcon, SuccessIcon } from "@auth/components/Icon";
+import { FailureIcon, SuccessIcon } from "@/features/auth/components/Icon";
 import { verifyEmailService } from "@auth/api/authService";
 import { useState } from "react";
 

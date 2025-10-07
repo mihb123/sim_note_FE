@@ -5,9 +5,10 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@features/*": ["src/features/*"]
+      "@/*": ["./src/*"],
+      "@features/*": ["./src/features/*"],
+      "@auth/*": ["./src/features/auth/*"]
     }
   }
 }

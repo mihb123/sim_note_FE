@@ -1,13 +1,18 @@
+import Sidebar from "./components/Sidebar/Sidebar";
+import NoteContent from "./components/NoteContent";
+import "@/styles//App.css";
+import { ThemeProvider } from "@/components/Toggle_theme/theme-provider";
+import { useUser } from '@/hooks/useUser';
+
 export default function App() {
-  const Logout = () => {
-    localStorage.removeItem('authToken');
-    window.location.href = '/auth/login';
-  };
+  useUser();
 
   return (
-    <>
-      <h1>Welcome to SimNote</h1>
-      <button onClick={Logout} className='btn btn-primary hover:bg-blue-700 hover:text-white hover:cursor-pointer'>Logout</button>
-    </>
+    <ThemeProvider>
+      <main className="flex">
+        <Sidebar />
+        <NoteContent />
+      </main>
+    </ThemeProvider>
   );
 }

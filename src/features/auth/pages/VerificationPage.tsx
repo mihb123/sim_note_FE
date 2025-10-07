@@ -1,6 +1,6 @@
 import { verifyEmailService } from "@auth/api/authService";
 import { useState } from "react";
-import { EmailIcon } from "@auth/components/Icon";
+import { EmailIcon } from "@/features/auth/components/Icon";
 
 export default function VerificationPage() {
   const [isLoading, setIsLoading] = useState(false);
