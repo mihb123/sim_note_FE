@@ -1,6 +1,14 @@
 import type { Note, NotesMap } from "@/types";
 import { create } from 'zustand';
 
+export interface NoteStore {
+  notes: NotesMap;
+  focusNote: Note | null;
+  setNotes: (notes: {[key: string]: Note}) => void;
+  updateNote: (newNote: Note) => void;
+  setFocusNote: (id: string) => void;
+}
+
 export const useNotes = create((set) => ({
   notes: {} as NotesMap,
   focusNote: null as Note | null,

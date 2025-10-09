@@ -1,7 +1,6 @@
 import { PanelLeftOpen, EllipsisVertical } from "lucide-react";
-import { useNotes } from '@/hooks/useNotes';
+import { useNotes, type NoteStore } from '@/hooks/useNotes';
 import { useEffect, useRef, useState, useCallback } from "react";
-import type { NoteStore } from "@/types";
 import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
 

@@ -1,15 +1,12 @@
 import type { Note } from "@/types";
-import { useNotes } from "@/hooks/useNotes";
+import { useNotes, type NoteStore } from "@/hooks/useNotes";
 
 interface NoteItemProps {
   note: Note;
 }
 
 export const NoteItem = ({ note }: NoteItemProps) => { 
-  const { focusNote, setFocusNote } = useNotes() as {
-    focusNote: Note | null;
-    setFocusNote: (id: string) => void;
-  };
+  const { focusNote, setFocusNote } = useNotes() as NoteStore;
 
   const selectNote = () => {
     setFocusNote(note.id);    

@@ -17,8 +17,11 @@ type Note = {
 };
 
 type NotesMap = Record<string, Note>;
-type NoteStore = {
-  focusNote: Note | null;
+
+interface SaveNoteParams {
+  text: string;
+  focusNote: Note
   updateNote: (note: Note) => void;
 };
-export type { User, Note, NotesMap, NoteStore };
+
+export type { User, Note, NotesMap, SaveNoteParams };
