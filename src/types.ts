@@ -12,8 +12,13 @@ type Note = {
   title: string;
   content: string;
   user_id: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 };
 
-export type { User, Note };
+type NotesMap = Record<string, Note>;
+type NoteStore = {
+  focusNote: Note | null;
+  updateNote: (note: Note) => void;
+};
+export type { User, Note, NotesMap, NoteStore };

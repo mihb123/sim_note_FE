@@ -1,16 +1,28 @@
 import type { Note } from "@/types";
+import { useNotes } from "@/hooks/useNotes";
 
 interface NoteItemProps {
   note: Note;
-  isSelected: boolean;
-  onSelect: (id: string) => void;
 }
 
-export const NoteItem = ({ note, isSelected, onSelect }: NoteItemProps) => (
+export const NoteItem = ({ note }: NoteItemProps) => { 
+  const { focusNote, setFocusNote } = useNotes() as {
+    focusNote: Note | null;
+    setFocusNote: (id: string) => void;
+  };
+
+  const selectNote = () => {
+    setFocusNote(note.id);    
+    localStorage.setItem("focusNoteId", note.id);
+  };
+  const isSelected = focusNote?.id === note.id;
+  
+  return (
   <div
-    onClick={() => onSelect(note.id)}
-    className={`noteItem pl-7 pr-3 mb-1 py-1 cursor-pointer rounded-md text-sidebar-text ${isSelected ? 'selected' : 'hover:bg-accent hover:text-sidebar-foreground transition-colors'}`}
+    onClick={selectNote}
+    className={`noteItem pl-7 pr-3 mb-1 py-1 cursor-pointer rounded-md text-sidebar-text ${isSelected ? 'selected' : 'hover:bg-accent hover:text-sidebar-foreground'}`}
   >
     <div className="noteTitle">{note.title}</div>
   </div>
-);
+  );
+};

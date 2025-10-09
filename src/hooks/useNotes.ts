@@ -1,23 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import api from '@/api/api';
-import type { Note } from '@/types';
+import type { Note, NotesMap } from "@/types";
+import { create } from 'zustand';
 
-export function useNotes() {
-  const [notes, setNotes] = useState<Note[]>([]);
-
-  const fetchNotes = useCallback(async () => {
-    try {
-      const response = await api.get<Note[]>('/notes');
-      setNotes(response.data);
-    } catch (err) {
-      console.error('Failed to fetch notes:', err);
-      setNotes([]);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchNotes();
-  }, [fetchNotes]);
-
-  return { notes, fetchNotes };
-}
+export const useNotes = create((set) => ({
+  notes: {} as NotesMap,
+  focusNote: null as Note | null,
+  setNotes: (notes: {[key: string]: Note}) => set({ notes }),
+  updateNote: (newNote: Note) => set((state: { notes: NotesMap }) => ({ notes: { ...state.notes, [newNote.id]: newNote } })),
+  setFocusNote: (id: string) => set((state: { notes: NotesMap }) => ({ focusNote: state.notes[id] || null })),
+}));
