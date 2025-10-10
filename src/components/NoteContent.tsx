@@ -20,14 +20,16 @@ export default function NoteContent() {
         });
       }
     }
+    setCurrentDoc(initialContent);
   }, [focusNote, view]);
 
   const handleSave = useCallback(() => {
     if (currentDoc && focusNote) saveNote({ text: currentDoc, focusNote, updateNote });
-  }, [currentDoc, focusNote, updateNote]);
+  }, [currentDoc, focusNote]);
 
   useEffect(() => {
     if (!currentDoc || !focusNote) return;
+    if (currentDoc === initialContent) return;
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(handleSave, 500);

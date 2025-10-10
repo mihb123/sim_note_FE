@@ -10,7 +10,6 @@ export const NoteItem = ({ note }: NoteItemProps) => {
 
   const selectNote = () => {
     setFocusNote(note.id);    
-    localStorage.setItem("focusNoteId", note.id);
   };
   const isSelected = focusNote?.id === note.id;
   
