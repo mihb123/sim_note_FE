@@ -1,13 +1,13 @@
 import type { Note } from "@/types";
 import { useNotes, type NoteStore } from "@/hooks/useNotes";
+import React from "react";
 
 interface NoteItemProps {
   note: Note;
 }
-
-export const NoteItem = ({ note }: NoteItemProps) => { 
+const NoteItem = ({ note }: NoteItemProps) => { 
   const { focusNote, setFocusNote } = useNotes() as NoteStore;
-
+  // log("Render NoteItem: ", note.id);
   const selectNote = () => {
     setFocusNote(note.id);    
   };
@@ -22,3 +22,5 @@ export const NoteItem = ({ note }: NoteItemProps) => {
   </div>
   );
 };
+
+export default React.memo(NoteItem);

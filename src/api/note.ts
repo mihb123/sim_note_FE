@@ -3,7 +3,7 @@ import type { Note } from '@/types';
 
 export const FetchNotes = async (): Promise<Note[]> => {
   try {
-    const response = await api.get<Note[]>('/notes');
+    const response = await api.get<Note[]>('/api/notes');
     return response.data;
   } catch (error) {
     console.error('Error fetching notes:', error);
@@ -14,7 +14,7 @@ export const FetchNotes = async (): Promise<Note[]> => {
 
 export const UpdateNote = async (newNote: Note): Promise<Note> => {
   try {
-    const response = await api.post<Note>(`/notes-update/`, newNote);
+    const response = await api.post<Note>(`/api/notes-update/`, newNote);
     return response.data;
   } catch (error) {
     console.error('Error updating note:', error);
@@ -24,7 +24,7 @@ export const UpdateNote = async (newNote: Note): Promise<Note> => {
 
 export const CreateNote = async (note: Partial<Note>): Promise<Note> => {
   try {
-    const response = await api.post<Note>('/notes-create', note);
+    const response = await api.post<Note>('/api/notes-create', note);
     return response.data;
   } catch (error) {
     console.error('Error creating note:', error);
@@ -34,7 +34,7 @@ export const CreateNote = async (note: Partial<Note>): Promise<Note> => {
 
 export const DeleteNote = async (noteId: string): Promise<void> => {
   try {
-    await api.delete(`/notes-delete/${noteId}`);
+    await api.delete(`/api/notes-delete/${noteId}`);
   } catch (error) {
     console.error('Error deleting note:', error);
     throw error;

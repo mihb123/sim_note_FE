@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { FailureIcon, SuccessIcon } from "@/features/auth/components/Icon";
-import { verifyEmailService } from "@auth/api/authService";
+import { verifyEmailService } from "@/features/auth/api/authService";
 import { useState } from "react";
 
 export default function VerifiedPage() {

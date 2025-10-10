@@ -1,5 +1,5 @@
-import { useAuthForm } from '@auth/hooks/useAuthForm';
-import LoadingSpinner from '@auth/components/LoadingSpinner';
+import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
+import LoadingSpinner from '@/features/auth/components/LoadingSpinner';
 import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
