@@ -1,4 +1,4 @@
-import { verifyEmailService } from "@auth/api/authService";
+import { verifyEmailService } from "@/features/auth/api/authService";
 import { useState } from "react";
 import { EmailIcon } from "@/features/auth/components/Icon";
 

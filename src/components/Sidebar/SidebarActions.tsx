@@ -2,11 +2,15 @@ import { DeleteNote, CreateNote, FetchNotes } from "@/api/note";
 import { SquarePen, ArrowUpNarrowWide, Trash, RotateCw } from "lucide-react";
 import { useNotes, type NoteStore } from "@/hooks/useNotes";
 import type { Note } from "@/types";
+import { type FocusNoteStore, useFocusNote } from "@/hooks/useFocusNote";
+import { useCallback } from "react";
 
 export const SidebarActions = () => {
-  const { notes, focusNote, setFocusNote, DeleteNoteFromStore, AddNoteToStore, setNotes } = useNotes() as NoteStore;
+  const { deleteNoteFromStore, addNoteToStore, setNotes } = useNotes() as NoteStore;
+  const notes = useNotes((state) => state.notes)
+  const { focusNote, setFocusNote } = useFocusNote() as FocusNoteStore;
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback( async () => {
     if (!focusNote) return;
     const noteIdToDelete = focusNote.id;
 
@@ -17,33 +21,34 @@ export const SidebarActions = () => {
     const sortedNotes = remainingNotes.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
     const newFocusNoteId = sortedNotes.length > 0 ? sortedNotes[0].id : "";
 
-    DeleteNoteFromStore(noteIdToDelete);
+    deleteNoteFromStore(noteIdToDelete);
     setFocusNote(newFocusNoteId);
-  };
+  },[focusNote, deleteNoteFromStore, setFocusNote])
 
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     const newNotePayload = { title: "Untitled", content: "" };
     const createdNote = await CreateNote(newNotePayload);
-    AddNoteToStore(createdNote);
+    addNoteToStore(createdNote);
     setFocusNote(createdNote.id);
     localStorage.setItem("focusNoteId", createdNote.id);    
-  };
+  }, [addNoteToStore, setFocusNote]);
 
-  const onload = () => {
-    FetchNotes().then(fetchedNotes => {
-      const notesMap: { [key: string]: Note } = {};
-      fetchedNotes.forEach(note => { notesMap[note.id] = note; });
-      setNotes(notesMap);
-    });
-  };
-
+  const onload = useCallback(() => {
+    () => {
+      FetchNotes().then(fetchedNotes => {
+        const notesMap: { [key: string]: Note } = {};
+        fetchedNotes.forEach(note => { notesMap[note.id] = note; });
+        setNotes(notesMap);
+      });
+    }
+  }, [setNotes]);
 
   return (
     <div className="flex justify-center p-3">
       <div className="flex gap-4">
         <SquarePen onClick={handleCreate} />
         <ArrowUpNarrowWide />
-        <RotateCw onClick={() => onload()}/>
+        <RotateCw onClick={onload}/>
         <Trash onClick={handleDelete} />
       </div>
     </div>

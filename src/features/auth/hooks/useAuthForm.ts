@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
-import { loginService, registerService } from '@auth/api/authService';
-import type { LoginData, RegisterData, Fields, FormType} from "@auth/types";
+import { loginService, registerService } from '@/features/auth/api/authService';
+import type { LoginData, RegisterData, Fields, FormType} from "@/features/auth/types";
 import { useNavigate } from "react-router-dom";
 
 const initialFields: Fields = {
