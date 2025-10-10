@@ -5,9 +5,7 @@ import { NoteList } from "@/components/Sidebar/NoteList";
 import { SidebarFooter } from "@/components/Sidebar/SidebarFooter";
 
 export default function Sidebar() {  
-
-
-
+  
   return (
     <div className="flex flex-col w-64 h-screen bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <SidebarHeader />

@@ -3,29 +3,33 @@ import { useNotes, type NoteStore } from '@/hooks/useNotes';
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
+import { useFocusNote, type FocusNoteStore } from "@/hooks/useFocusNote";
 
 export default function NoteContent() {
-  const { focusNote, updateNote } = useNotes() as NoteStore;
+  const { updateNote } = useNotes() as NoteStore;
+  const { focusNote } = useFocusNote() as FocusNoteStore;
   const [currentDoc, setCurrentDoc] = useState<string | null>(null);
   const debounceRef = useRef<number | null>(null);
   const initialContent = focusNote ? `# ${focusNote.title}\n${focusNote.content}` : "";
-  const { editorRef, view, info } = useEditor({ initialContent, onDocChange: setCurrentDoc });
+  const { editorRef, view, info, updateInfo } = useEditor({ initialContent, onDocChange: setCurrentDoc });
 
   useEffect(() => {
     if (view) {
       const currentEditorDoc = view.state.doc.toString();
-      if (currentEditorDoc !== initialContent) {
-        view.dispatch({
-          changes: { from: 0, to: currentEditorDoc.length, insert: initialContent }
-        });
-      }
+      if (currentEditorDoc !== initialContent) view.dispatch({
+        changes: {
+          from: 0,
+          to: currentEditorDoc.length, insert: initialContent
+        }
+      });
     }
+    updateInfo(initialContent)
     setCurrentDoc(initialContent);
-  }, [focusNote, view]);
+  }, [focusNote, view, initialContent]);
 
   const handleSave = useCallback(() => {
     if (currentDoc && focusNote) saveNote({ text: currentDoc, focusNote, updateNote });
-  }, [currentDoc, focusNote]);
+  }, [currentDoc, focusNote, updateNote]);
 
   useEffect(() => {
     if (!currentDoc || !focusNote) return;
@@ -35,8 +39,8 @@ export default function NoteContent() {
     debounceRef.current = window.setTimeout(handleSave, 500);
 
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); }
-  }, [currentDoc, focusNote, handleSave]);
-  
+  }, [currentDoc, focusNote, handleSave, initialContent]);
+
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="statusBar flex p-3 shrink-0">

@@ -20,6 +20,14 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   const [view, setView] = useState<EditorView | null>(null);
   const [info, setInfo] = useState<EditorInfo>({ words: 0, lines: 0, chars: 0 });
 
+  const updateInfo = (text: string) => {
+    setInfo({
+      lines: text.split("\n").length,
+      words: text.trim().split(/\s+/).filter(Boolean).length,
+      chars: text.length,
+    });
+  };
+
   useEffect(() => {
     if (!editorRef.current) return;
 
@@ -27,11 +35,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       if (update.docChanged) {
         const text = update.state.doc.toString();
         onDocChange(text);
-
-        const lines = text.split("\n").length;
-        const words = text.trim().split(/\s+/).filter(Boolean).length;
-        const chars = text.length;
-        setInfo({ lines, words, chars });
+        updateInfo(text);
       }
     });
 
@@ -56,7 +60,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       editorView.destroy();
       setView(null);
     };
-  }, []);
+  }, [initialContent, onDocChange]);
 
-  return { editorRef, view, info };
+  return { editorRef, view, info, updateInfo };
 };
