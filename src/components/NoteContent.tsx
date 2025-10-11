@@ -1,48 +1,12 @@
 import { PanelRight, PanelLeftOpen, EllipsisVertical } from "lucide-react";
-import useNotes from '@/hooks/useNotes';
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useEditor } from "@/hooks/useEditor";
-import { saveNote } from "@/utils/note";
-import useFocusNote from "@/hooks/useFocusNote";
+import useNoteContent from "@/hooks/useNoteContent";
 import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";
 
 export default function NoteContent() {
-  const updateNote = useNotes((state) => state.updateNote);
-  const focusNote = useFocusNote((state) => state.focusNote);
-  const openSidebar = useSidebarStateOpen((state) => state.openSidebar);
   const isSidebarOpen = useSidebarStateOpen((state) => state.isOpen);
-  const [currentDoc, setCurrentDoc] = useState<string | null>(null);
-  const debounceRef = useRef<number | null>(null);
-  const initialContent = focusNote ? `# ${focusNote.title}\n${focusNote.content}` : "";
-  const { editorRef, view, info, updateInfo } = useEditor({ initialContent, onDocChange: setCurrentDoc });
+  const openSidebar = useSidebarStateOpen((state) => state.openSidebar);
 
-  useEffect(() => {
-    if (view) {
-      const currentEditorDoc = view.state.doc.toString();
-      if (currentEditorDoc !== initialContent) view.dispatch({
-        changes: {
-          from: 0,
-          to: currentEditorDoc.length, insert: initialContent
-        }
-      });
-    }
-    updateInfo(initialContent)
-    setCurrentDoc(initialContent);
-  }, [focusNote, view, initialContent]);
-
-  const handleSave = useCallback(() => {
-    if (currentDoc && focusNote) saveNote({ text: currentDoc, focusNote, updateNote });
-  }, [currentDoc, focusNote, updateNote]);
-
-  useEffect(() => {
-    if (!currentDoc || !focusNote) return;
-    if (currentDoc === initialContent) return;
-
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = window.setTimeout(handleSave, 500);
-
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); }
-  }, [currentDoc, focusNote, handleSave, initialContent]);
+  const { editorRef, info } = useNoteContent();
 
   return (
     <div className="flex-1 flex flex-col min-h-0">

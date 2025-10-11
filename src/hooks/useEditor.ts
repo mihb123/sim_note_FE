@@ -19,6 +19,12 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<EditorView | null>(null);
   const [info, setInfo] = useState<EditorInfo>({ words: 0, lines: 0, chars: 0 });
+  const onDocChangeRef = useRef(onDocChange);
+
+  // keep latest callback reference without triggering effect
+  useEffect(() => {
+    onDocChangeRef.current = onDocChange;
+  }, [onDocChange]);
 
   const updateInfo = (text: string) => {
     setInfo({
@@ -29,12 +35,12 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   };
 
   useEffect(() => {
-    if (!editorRef.current) return;
+    if (!editorRef.current || view) return; // prevent re-init
 
     const updateListener = EditorView.updateListener.of((update) => {
       if (update.docChanged) {
         const text = update.state.doc.toString();
-        onDocChange(text);
+        onDocChangeRef.current(text);
         updateInfo(text);
       }
     });
@@ -55,12 +61,12 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
     });
 
     setView(editorView);
-
+    log("Editor initialized")
     return () => {
       editorView.destroy();
       setView(null);
     };
-  }, [initialContent, onDocChange]);
+  }, []);
 
   return { editorRef, view, info, updateInfo };
 };
