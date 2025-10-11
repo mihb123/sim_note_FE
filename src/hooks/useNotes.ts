@@ -1,7 +1,7 @@
 import type { Note, NotesMap } from "@/types";
 import { create } from 'zustand';
 
-export interface NoteStore {
+interface NoteStore {
   notes: NotesMap;
   setNotes: (notes: { [key: string]: Note }) => void;
   updateNote: (newNote: Note) => void;
@@ -9,7 +9,7 @@ export interface NoteStore {
   deleteNoteFromStore: (id: string) => void;
 }
 
-export const useNotes = create<NoteStore>((set) => ({
+const useNotes = create<NoteStore>((set) => ({
   notes: {} as NotesMap,
   setNotes: (notes) => set({ notes }),
   updateNote: (newNote) => set((state) => ({
@@ -24,3 +24,5 @@ export const useNotes = create<NoteStore>((set) => ({
     return { notes: newNotes };
   }),
 }));
+
+export default useNotes;

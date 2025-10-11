@@ -2,13 +2,14 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import NoteContent from "./components/NoteContent";
 import "@/styles//App.css";
 import { ThemeProvider } from "@/components/Toggle_theme/theme-provider";
-
+import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";
 export default function App() {
+  const { isOpen } = useSidebarStateOpen();
 
   return (
     <ThemeProvider>
       <main className="flex">
-        <Sidebar />
+        {isOpen && <Sidebar />}
         <NoteContent />
       </main>
     </ThemeProvider>

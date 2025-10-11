@@ -2,8 +2,10 @@ import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/Toggle_theme/toggle-mode";
 import { useUser } from "@/hooks/useUser";
+import { memo } from "react";
 
-export const SidebarFooter = () => {
+export const SidebarFooter = memo(() => {
+  log("Render SidebarFooter")
   const Logout = () => {
     localStorage.removeItem('authToken');
     window.location.href = '/auth/login';
@@ -23,4 +25,4 @@ export const SidebarFooter = () => {
       </div>
     </div>
   )
-};
+})

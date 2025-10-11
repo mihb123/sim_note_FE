@@ -1,14 +1,21 @@
 import { DeleteNote, CreateNote, FetchNotes } from "@/api/note";
 import { SquarePen, ArrowUpNarrowWide, Trash, RotateCw } from "lucide-react";
-import { useNotes, type NoteStore } from "@/hooks/useNotes";
+import useNotes from "@/hooks/useNotes";
 import type { Note } from "@/types";
-import { type FocusNoteStore, useFocusNote } from "@/hooks/useFocusNote";
-import { useCallback } from "react";
+import useFocusNote from "@/hooks/useFocusNote";
+import { memo, useCallback } from "react";
+import { useShallow } from "zustand/shallow";
 
-export const SidebarActions = () => {
-  const { deleteNoteFromStore, addNoteToStore, setNotes } = useNotes() as NoteStore;
-  const notes = useNotes((state) => state.notes)
-  const { focusNote, setFocusNote } = useFocusNote() as FocusNoteStore;
+export const SidebarActions = memo(() => {  
+  const { focusNote, setFocusNote } = useFocusNote(useShallow(state => ({ focusNote: state.focusNote, setFocusNote: state.setFocusNote })));
+  const { notes, deleteNoteFromStore, addNoteToStore, setNotes } = useNotes(
+    useShallow(state => ({
+      notes: state.notes,
+      deleteNoteFromStore: state.deleteNoteFromStore,
+      addNoteToStore: state.addNoteToStore,
+      setNotes: state.setNotes,
+    }))
+  );
 
   const handleDelete = useCallback( async () => {
     if (!focusNote) return;
@@ -23,7 +30,7 @@ export const SidebarActions = () => {
 
     deleteNoteFromStore(noteIdToDelete);
     setFocusNote(newFocusNoteId);
-  },[focusNote, deleteNoteFromStore, setFocusNote])
+  },[focusNote, notes, deleteNoteFromStore, setFocusNote])
 
   const handleCreate = useCallback(async () => {
     const newNotePayload = { title: "Untitled", content: "" };
@@ -53,4 +60,4 @@ export const SidebarActions = () => {
       </div>
     </div>
   );
-};
+})
