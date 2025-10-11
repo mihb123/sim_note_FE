@@ -1,13 +1,16 @@
-import { PanelLeftOpen, EllipsisVertical } from "lucide-react";
-import { useNotes, type NoteStore } from '@/hooks/useNotes';
+import { PanelRight, PanelLeftOpen, EllipsisVertical } from "lucide-react";
+import useNotes from '@/hooks/useNotes';
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
-import { useFocusNote, type FocusNoteStore } from "@/hooks/useFocusNote";
+import useFocusNote from "@/hooks/useFocusNote";
+import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";
 
 export default function NoteContent() {
-  const { updateNote } = useNotes() as NoteStore;
-  const { focusNote } = useFocusNote() as FocusNoteStore;
+  const updateNote = useNotes((state) => state.updateNote);
+  const focusNote = useFocusNote((state) => state.focusNote);
+  const openSidebar = useSidebarStateOpen((state) => state.openSidebar);
+  const isSidebarOpen = useSidebarStateOpen((state) => state.isOpen);
   const [currentDoc, setCurrentDoc] = useState<string | null>(null);
   const debounceRef = useRef<number | null>(null);
   const initialContent = focusNote ? `# ${focusNote.title}\n${focusNote.content}` : "";
@@ -44,9 +47,10 @@ export default function NoteContent() {
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="statusBar flex p-3 shrink-0">
+        {!isSidebarOpen && <PanelLeftOpen className="mr-auto" onClick={openSidebar} />}
         <div className="flex gap-4 ml-auto">
           <EllipsisVertical />
-          <PanelLeftOpen />
+          <PanelRight />
         </div>
       </div>
       <div ref={editorRef} className="flex-1 overflow-y-auto pl-10 pr-4" id="sim_editor"></div>

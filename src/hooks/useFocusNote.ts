@@ -1,13 +1,13 @@
 import type { Note } from "@/types";
 import { create } from 'zustand';
-import { useNotes } from '@/hooks/useNotes';
+import useNotes from '@/hooks/useNotes';
 
-export interface FocusNoteStore {
+interface FocusNoteStore {
   focusNote: Note | null;
   setFocusNote: (id: string) => void;
 }
 
-export const useFocusNote = create<FocusNoteStore>((set) => ({
+const useFocusNote = create<FocusNoteStore>((set) => ({
   focusNote: null,
   setFocusNote: (id) => {
     const notes = useNotes.getState().notes;
@@ -15,3 +15,5 @@ export const useFocusNote = create<FocusNoteStore>((set) => ({
     set({ focusNote: notes[id] || null });
   },
 }));
+
+export default useFocusNote;

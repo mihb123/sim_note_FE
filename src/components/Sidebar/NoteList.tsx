@@ -1,15 +1,14 @@
 import type { Note, NotesMap } from "@/types";
 import { NoteItem } from "./NoteItem";
-import { useEffect, useMemo, useRef } from "react";
-import { useNotes } from '@/hooks/useNotes';
+import { memo, useEffect, useMemo, useRef } from "react";
+import useNotes from '@/hooks/useNotes';
 import { FetchNotes } from "@/api/note";
-import { useFocusNote } from "@/hooks/useFocusNote";
+import { useShallow } from "zustand/shallow";
+import useFocusNote from "@/hooks/useFocusNote";
 
-export const NoteList = () => {
-  const notes = useNotes((state) => state.notes);
-  const setNotes = useNotes((state) => state.setNotes);
-  const focusNote = useFocusNote((state) => state.focusNote);
-  const setFocusNote = useFocusNote((state) => state.setFocusNote);
+export const NoteList = memo(() => {
+  const { notes, setNotes } = useNotes(useShallow(state => ({ notes: state.notes, setNotes: state.setNotes })));
+  const { focusNote, setFocusNote } = useFocusNote(useShallow(state => ({ focusNote: state.focusNote, setFocusNote: state.setFocusNote })));
 
   const noteListRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +31,9 @@ export const NoteList = () => {
     );
   }, [notes]);
 
+  const noteKB = JSON.stringify(notes).length / 1024 / 1024;
+  log("Render NoteList & Volumn of notes is " + (noteKB).toFixed(2) + "MB")
+
   useEffect(() => {    
     if (noteListRef.current) {
       const selectedNote = noteListRef.current?.querySelector(".selected"); 
@@ -42,8 +44,8 @@ export const NoteList = () => {
   }, [sortedNotes]);
 
   return (
-    <div ref={noteListRef} className="noteList flex-1 overflow-y-auto flex flex-col px-4">
+    <div ref={noteListRef} className="noteList flex-1 overflow-y-auto flex flex-col px-4 mr-2">
       {sortedNotes.map(note => <NoteItem key={note.id} note={note} isSelected={note.id === focusNote?.id} />)}
     </div>
   );
-};
+})
