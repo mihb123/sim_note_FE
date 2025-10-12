@@ -3,3 +3,17 @@ svg {
   height: 20px;
   color: #6d6c6c;
 }
+
+.statusBar .bookmark{
+  transition: stroke 0.2s ease, fill 0.2s ease;
+}
+
+.statusBar .bookmark.active:hover{
+  stroke: #8b65ff;
+  fill: #8b65ff;
+}
+
+.bookmark.active {
+  stroke: #a78bfa;
+  fill: #a78bfa;
+}

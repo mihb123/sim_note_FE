@@ -13,9 +13,11 @@ const useNoteContent = () => {
 
   // 2. Editor and content state
   const [currentDoc, setCurrentDoc] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState<boolean>(focusNote?.is_save || false);
   const debounceRef = useRef<number | null>(null);
   const initialContent = focusNote ? `# ${focusNote.title}\n${focusNote.content}` : "";
   const { editorRef, view, info, updateInfo } = useEditor({ initialContent, onDocChange: setCurrentDoc });
+  log('useNoteContent run');
 
   // 3. Effect to update editor when focusNote changes
   useEffect(() => {
@@ -28,6 +30,7 @@ const useNoteContent = () => {
             changes: { from: 0, to: currentEditorDoc.length, insert: newContent }
           });
         }
+        setIsSaved(focusNote.is_save);
         updateInfo(initialContent);
         setCurrentDoc(initialContent);
       }
@@ -36,11 +39,11 @@ const useNoteContent = () => {
   }, [focusNote, view, updateInfo]);
 
   // 4. Debounced save logic
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback((newIsSaved = isSaved ) => {
     if (currentDoc && focusNote) {
-      saveNote({ text: currentDoc, focusNote, updateNote });
+      saveNote({ text: currentDoc, focusNote, updateNote, isSaved:newIsSaved });
     }
-  }, [currentDoc, focusNote, updateNote]);
+  }, [currentDoc, focusNote, updateNote, isSaved]);
 
   useEffect(() => {
     if (!currentDoc || !focusNote) return;
@@ -52,12 +55,9 @@ const useNoteContent = () => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [currentDoc, focusNote, handleSave, initialContent]);
+  }, [currentDoc, focusNote, handleSave]);
 
-  return {
-    editorRef,
-    info
-  };
+  return { editorRef, info, isSaved, setIsSaved, handleSave};
 };
 
 export default useNoteContent;
