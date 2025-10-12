@@ -4,6 +4,11 @@ svg {
   color: #6d6c6c;
 }
 
+svg:hover {
+  color: var(--sidebar-foreground);
+  cursor: pointer;
+}
+
 .statusBar .bookmark{
   transition: stroke 0.2s ease, fill 0.2s ease;
 }
@@ -16,4 +21,8 @@ svg {
 .bookmark.active {
   stroke: #a78bfa;
   fill: #a78bfa;
+}
+
+.sidebar_header .active svg:hover{
+  color: #6d6c6c;
 }

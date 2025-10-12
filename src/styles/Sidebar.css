@@ -8,11 +8,6 @@
   color: rgb(255, 255, 255);
 }
 
-svg:hover {
-  color: var(--sidebar-foreground);
-  cursor: pointer;
-}
-
 .noteItem.selected .noteTitle {
   color: hsl(var(--sidebar-foreground));
 }

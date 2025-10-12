@@ -5,11 +5,12 @@ import useNotes from '@/hooks/useNotes';
 import { FetchNotes } from "@/api/note";
 import { useShallow } from "zustand/shallow";
 import useFocusNote from "@/hooks/useFocusNote";
+import useActiveTab from "@/hooks/useActiveTab";
 
 export const NoteList = memo(() => {
   const { notes, setNotes } = useNotes(useShallow(state => ({ notes: state.notes, setNotes: state.setNotes })));
   const { focusNote, setFocusNote } = useFocusNote(useShallow(state => ({ focusNote: state.focusNote, setFocusNote: state.setFocusNote })));
-
+  const activeTab = useActiveTab((state)=>state.activeTab);
   const noteListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,6 +32,13 @@ export const NoteList = memo(() => {
     );
   }, [notes]);
 
+  const saveNotes = useMemo(() => {
+    return Object.values(notes).filter(note => note.is_save);
+  }, [notes]);
+
+  let noteList = sortedNotes;
+  if (activeTab == "save") noteList = saveNotes;
+
   const noteKB = JSON.stringify(notes).length / 1024 / 1024;
   log("Render NoteList & Volumn of notes is " + (noteKB).toFixed(2) + "MB")
 
@@ -45,7 +53,7 @@ export const NoteList = memo(() => {
 
   return (
     <div ref={noteListRef} className="noteList flex-1 overflow-y-auto flex flex-col px-4 mr-2">
-      {sortedNotes.map(note => <NoteItem key={note.id} note={note} isSelected={note.id === focusNote?.id} />)}
+      {noteList.map(note => <NoteItem key={note.id} note={note} isSelected={note.id === focusNote?.id} />)}
     </div>
   );
 })
