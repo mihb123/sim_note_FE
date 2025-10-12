@@ -12,6 +12,7 @@ type Note = {
   title: string;
   content: string;
   user_id: string;
+  is_save: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -22,6 +23,7 @@ interface SaveNoteParams {
   text: string;
   focusNote: Note
   updateNote: (note: Note) => void;
+  isSaved: boolean;
 };
 
 export type { User, Note, NotesMap, SaveNoteParams };
