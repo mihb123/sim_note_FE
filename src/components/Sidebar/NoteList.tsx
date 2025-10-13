@@ -1,6 +1,6 @@
 import { NoteItem } from "./NoteItem";
 import { NoteItemSkeleton } from "./NoteItemSkeleton";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import useNotes from '@/hooks/useNotes';
 import { useShallow } from "zustand/shallow";
 import useFocusNote from "@/hooks/useFocusNote";
@@ -43,12 +43,20 @@ export const NoteList = memo(() => {
 
   }, [focusNote, isInitialLoad, sortedNotes.length]);
 
-  const handleScroll = useCallback(() => {
-    const el = noteListRef.current;
-    if (!el || !hasMore || isLoading || error) return;
-    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
-      loadMore();
-    }
+  const handleScroll = useMemo(() => {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+
+    return () => {
+      if (timeout) return; 
+      timeout = setTimeout(() => {
+        timeout = null;
+        const el = noteListRef.current;
+        if (!el || !hasMore || isLoading || error) return;
+        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
+          loadMore();
+        }
+      }, 200);
+    };
   }, [hasMore, isLoading, loadMore]);
 
   const isInitialLoading = isLoading && Object.keys(notes).length === 0;
@@ -60,7 +68,7 @@ export const NoteList = memo(() => {
       ) : (
         noteList.map(note => <NoteItem key={note.id} note={note} isSelected={note.id === focusNote?.id} data-note-id={note.id} />)
       )}
-      {(hasMore && noteList.length > 30) && (         
+      {(hasMore && noteList.length >= 30) && (         
         <div>
           {Array.from({ length: 2 }).map((_, index) => <NoteItemSkeleton key={index} />)}
         </div>

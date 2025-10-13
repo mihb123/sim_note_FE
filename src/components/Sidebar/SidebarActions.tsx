@@ -20,17 +20,16 @@ export const SidebarActions = memo(() => {
   const handleDelete = useCallback( async () => {
     if (!focusNote) return;
     const noteIdToDelete = focusNote.id;
-    useNotes.getState().deleteNoteFromStore(noteIdToDelete);
-    const newFocusId = useNotes.getState().notes[0]?.id || "";
+    const noteDelete = notes[noteIdToDelete];
+    deleteNoteFromStore(noteIdToDelete);
+    const newFocusId = notes[0]?.id || "";
     setFocusNote(newFocusId);
 
-    try {
-      DeleteNote(noteIdToDelete);
-    } catch (error) {
-      useNotes.getState().addNoteToStore(notes[noteIdToDelete]);
+    DeleteNote(noteIdToDelete).catch((e) => {
+      addNoteToStore(noteDelete);
       setFocusNote(noteIdToDelete);
-      mutateNote()
-    }
+      throw e;
+    });  
   },[focusNote, notes, deleteNoteFromStore, setFocusNote])
 
   const handleCreate = useCallback(async () => {
@@ -39,16 +38,14 @@ export const SidebarActions = memo(() => {
     addNoteToStore(newNotePayload)
     setFocusNote(tempId);
     
-    try {
-      const data = await CreateNote(newNotePayload);
-      useNotes.getState().updateNote(data)
-      setFocusNote(data.id)      
-    } catch (e) {
-      throw e
-    } finally {
-      useNotes.getState().deleteNoteFromStore(tempId);
-    }
-    mutateNote()
+    CreateNote(newNotePayload).then((res) => {
+      useNotes.getState().updateNote(res)
+      setFocusNote(res.id);
+    }).catch((e) => {
+      throw e;
+    }).finally(() => {
+      deleteNoteFromStore(tempId);
+    });
   }, [addNoteToStore, setFocusNote]);
 
   const onload = () => {
