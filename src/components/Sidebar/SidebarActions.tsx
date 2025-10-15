@@ -8,11 +8,12 @@ import useNotesData from "@/data/note.data";
 
 export const SidebarActions = memo(() => {  
   const { focusNote, setFocusNote } = useFocusNote(useShallow(state => ({ focusNote: state.focusNote, setFocusNote: state.setFocusNote })));
-  const { notes, deleteNoteFromStore, addNoteToStore } = useNotes(
+  const { notes, deleteNoteFromStore, addNoteToStore, updateNote } = useNotes(
     useShallow(state => ({
       notes: state.notes,
       deleteNoteFromStore: state.deleteNoteFromStore,
       addNoteToStore: state.addNoteToStore,
+      updateNote: state.updateNote,
     }))
   );
   const { mutateNote } = useNotesData();
@@ -28,6 +29,7 @@ export const SidebarActions = memo(() => {
     DeleteNote(noteIdToDelete).catch((e) => {
       addNoteToStore(noteDelete);
       setFocusNote(noteIdToDelete);
+      mutateNote();
       throw e;
     });  
   },[focusNote, notes, deleteNoteFromStore, setFocusNote])
@@ -39,9 +41,10 @@ export const SidebarActions = memo(() => {
     setFocusNote(tempId);
     
     CreateNote(newNotePayload).then((res) => {
-      useNotes.getState().updateNote(res)
+      updateNote(res)
       setFocusNote(res.id);
     }).catch((e) => {
+      mutateNote();
       throw e;
     }).finally(() => {
       deleteNoteFromStore(tempId);
