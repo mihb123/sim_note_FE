@@ -9,13 +9,14 @@ interface NoteItemProps {
 }
 export const NoteItem = memo(({ note, isSelected }: NoteItemProps) => {
   const setFocusNote = useFocusNote(useShallow((state) => state.setFocusNote));
-  const selectNote = useCallback(() => setFocusNote(note.id), [setFocusNote, note.id]);
+  const selectNote = useCallback(() => setFocusNote(note.id), [setFocusNote, note]);
   log("Render NoteItem: ", note.id);  
   
   return (
   <div
     onClick={selectNote} 
-    className={`noteItem pl-7 pr-3 mb-1 py-1 cursor-pointer rounded-md text-sidebar-text ${isSelected ? 'selected' : 'hover:bg-accent hover:text-sidebar-foreground'}`}
+      className={`noteItem pl-7 pr-3 mb-1 py-1 cursor-pointer rounded-md text-sidebar-text ${isSelected ? 'selected' : 'hover:bg-accent hover:text-sidebar-foreground'}`}
+      data-note-id={note.id}    
     >
     <div className="noteTitle truncate w-full">{note.title}</div>
   </div>

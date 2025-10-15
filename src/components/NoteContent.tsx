@@ -10,7 +10,7 @@ export default function NoteContent() {
     setIsSaved(!isSaved);
     handleSave(!isSaved);
   }
-  log("NoteContent run")
+
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="statusBar flex p-3 shrink-0">

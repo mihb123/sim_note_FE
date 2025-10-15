@@ -5,15 +5,18 @@ import useNotes from '@/hooks/useNotes';
 import { useShallow } from "zustand/shallow";
 import useFocusNote from "@/hooks/useFocusNote";
 import useActiveTab from "@/hooks/useActiveTab";
-import useNotesData from "@/data/note.data";
+import useNotesData, { useSaveNotesData } from "@/data/note.data";
+import useSaveNotes from "@/hooks/useSaveNotes";
 
 export const NoteList = memo(() => {
-  const notes = useNotes((state) => state.notes);
+  const { notes } = useNotes(useShallow(state => ({ notes: state.notes, setNotes: state.setNotes })));
   const { focusNote, setFocusNote } = useFocusNote(useShallow(state => ({ focusNote: state.focusNote, setFocusNote: state.setFocusNote })));
-  const activeTab = useActiveTab((state)=>state.activeTab);
+  const activeTab = useActiveTab((state) => state.activeTab);
   const noteListRef = useRef<HTMLDivElement>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { loadMore, isLoading, hasMore, error } = useNotesData();
+  const saveNotes = useSaveNotes(s => s.saveNotes);
+  useSaveNotesData();
 
   const sortedNotes = useMemo(() => {
     return Object.values(notes).sort(
@@ -21,17 +24,14 @@ export const NoteList = memo(() => {
     );
   }, [notes]);
 
-  const saveNotes = useMemo(() => {
-    return Object.values(notes).filter(note => note.is_save);
-  }, [notes]);
-
   let noteList = sortedNotes;
-  if (activeTab == "save") noteList = saveNotes;
+  if (Array.isArray(saveNotes) && activeTab == 'save') noteList = saveNotes;
 
   let savedNoteId = localStorage.getItem("focusNoteId") || "";
-  if (!notes[savedNoteId]) savedNoteId = sortedNotes[0]?.id;
-  setFocusNote(savedNoteId);
-  
+  const findNote = (savedNoteId) ? saveNotes.find(note => note.id == savedNoteId) : null;
+  if (!notes[savedNoteId]) savedNoteId = findNote?.id || sortedNotes[0]?.id;
+  if (savedNoteId != undefined) setFocusNote(savedNoteId);
+
   useEffect(() => {
     if (!focusNote?.id || !noteListRef.current) return;
 
@@ -41,24 +41,25 @@ export const NoteList = memo(() => {
       setIsInitialLoad(false);
     }
 
-  }, [focusNote, isInitialLoad, sortedNotes.length]);
+  }, [focusNote, isInitialLoad]);
 
   const handleScroll = useMemo(() => {
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
     return () => {
-      if (timeout) return; 
+      if (timeout) return;
       timeout = setTimeout(() => {
         timeout = null;
         const el = noteListRef.current;
-        if (!el || !hasMore || isLoading || error) return;
+        const isLoad = !el || !hasMore || isLoading || error || activeTab !== 'all'
+        if (isLoad) return;
         if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50) {
           loadMore();
         }
       }, 200);
     };
   }, [hasMore, isLoading, loadMore]);
-
+  const isShowLoading = hasMore && noteList?.length >= 30 && activeTab == 'all';
   const isInitialLoading = isLoading && Object.keys(notes).length === 0;
 
   return (
@@ -66,9 +67,9 @@ export const NoteList = memo(() => {
       {isInitialLoading ? (
         Array.from({ length: 10 }).map((_, index) => <NoteItemSkeleton key={index} />)
       ) : (
-        noteList.map(note => <NoteItem key={note.id} note={note} isSelected={note.id === focusNote?.id} data-note-id={note.id} />)
+          noteList.map(note => <NoteItem key={note.id} note={note} isSelected={note.id == focusNote?.id} />)
       )}
-      {(hasMore && noteList.length >= 30) && (         
+      {isShowLoading && (
         <div>
           {Array.from({ length: 2 }).map((_, index) => <NoteItemSkeleton key={index} />)}
         </div>

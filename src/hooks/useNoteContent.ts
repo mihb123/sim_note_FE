@@ -5,6 +5,7 @@ import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
 import useFocusNote from "@/hooks/useFocusNote";
 import useDebounce from "./useDebounce";
+
 const useNoteContent = () => {
   // 1. Select state from stores using useShallow for optimization
   const updateNote = useNotes(useShallow(state => state.updateNote));
@@ -16,7 +17,6 @@ const useNoteContent = () => {
   const [isSaved, setIsSaved] = useState<boolean>(focusNote?.is_save || false);
   const initialContent = focusNote ? `# ${focusNote.title}\n${focusNote.content}` : "";
   const { editorRef, view, info, updateInfo } = useEditor({ initialContent, onDocChange: setCurrentDoc });
-  log('useNoteContent run');
 
   // 3. Effect to update editor when focusNote changes
   useEffect(() => {

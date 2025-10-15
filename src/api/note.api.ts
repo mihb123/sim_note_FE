@@ -1,7 +1,7 @@
 import api from '@/api/api';
 import type { Note, PaginationResponse } from '@/types';
 
-export const FetchNotes = async (url: string): Promise<PaginationResponse<Note>> => {
+export const FetchNotes = async (url: string): Promise<PaginationResponse<Note> | Note[]> => {
   try {
     const response = await api.get<PaginationResponse<Note>>(url)
     return response.data
