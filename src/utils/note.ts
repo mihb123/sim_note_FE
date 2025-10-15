@@ -1,5 +1,5 @@
 import type { SaveNoteParams, Note } from "@/types";
-import { UpdateNote } from "@/api/note";
+import { UpdateNote } from "@/api/note.api";
 
 export const saveNote = ({ text, focusNote, updateNote, isSaved }: SaveNoteParams) => {
   const [rawTitle, ...body] = text.split("\n");

@@ -1,22 +1,33 @@
 import type { Note, NotesMap } from "@/types";
 import { create } from 'zustand';
 
+type temp = {
+  title: string;
+  content: string;
+  id: string;
+}
+
 interface NoteStore {
   notes: NotesMap;
-  setNotes: (notes: { [key: string]: Note }) => void;
+  setNotes: (notes: Note[]) => void;
   updateNote: (newNote: Note) => void;
-  addNoteToStore: (note: Note) => void;
+  addNoteToStore: (note: temp | Note) => void;
   deleteNoteFromStore: (id: string) => void;
 }
 
 const useNotes = create<NoteStore>((set) => ({
-  notes: {} as NotesMap,
-  setNotes: (notes) => set({ notes }),
+  notes: {},
+  setNotes: (notesArray) => set({
+    notes: notesArray.reduce((acc, note) => {
+      acc[note.id] = note;
+      return acc;
+    }, {} as NotesMap),
+  }),
   updateNote: (newNote) => set((state) => ({
     notes: { ...state.notes, [newNote.id]: newNote },
   })),
   addNoteToStore: (note) => set((state) => ({
-    notes: { ...state.notes, [note.id]: note },
+    notes: { ...state.notes, [note.id]: note as Note },
   })),
   deleteNoteFromStore: (id) => set((state) => {
     const newNotes = { ...state.notes };

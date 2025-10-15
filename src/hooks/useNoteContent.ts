@@ -4,7 +4,7 @@ import useNotes from '@/hooks/useNotes';
 import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
 import useFocusNote from "@/hooks/useFocusNote";
-
+import useDebounce from "./useDebounce";
 const useNoteContent = () => {
   // 1. Select state from stores using useShallow for optimization
   const updateNote = useNotes(useShallow(state => state.updateNote));
@@ -14,7 +14,6 @@ const useNoteContent = () => {
   // 2. Editor and content state
   const [currentDoc, setCurrentDoc] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState<boolean>(focusNote?.is_save || false);
-  const debounceRef = useRef<number | null>(null);
   const initialContent = focusNote ? `# ${focusNote.title}\n${focusNote.content}` : "";
   const { editorRef, view, info, updateInfo } = useEditor({ initialContent, onDocChange: setCurrentDoc });
   log('useNoteContent run');
@@ -45,17 +44,11 @@ const useNoteContent = () => {
     }
   }, [currentDoc, focusNote, updateNote, isSaved]);
 
-  useEffect(() => {
-    if (!currentDoc || !focusNote) return;
-    if (currentDoc === initialContent) return;
-
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = window.setTimeout(handleSave, 500);
-
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [currentDoc, focusNote, handleSave]);
+  useDebounce(() => {
+    if (currentDoc && focusNote && currentDoc !== initialContent) {
+      handleSave();
+    }
+  }, [currentDoc, focusNote], 500);
 
   return { editorRef, info, isSaved, setIsSaved, handleSave};
 };

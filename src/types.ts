@@ -26,4 +26,20 @@ interface SaveNoteParams {
   isSaved: boolean;
 };
 
-export type { User, Note, NotesMap, SaveNoteParams };
+interface PaginationResponse<Note> {
+  current_page: number
+  data: Note[]
+  per_page: number
+  total: number
+  path: string
+  first_page_url: string
+  last_page_url: string
+  next_page_url?: string
+  prev_page_url?: string
+  first_page: number
+  last_page: number
+  from?: number
+  to?: number
+}
+
+export type { User, Note, NotesMap, SaveNoteParams, PaginationResponse };
