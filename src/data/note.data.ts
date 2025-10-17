@@ -3,6 +3,8 @@ import { useShallow } from 'zustand/shallow'
 import { FetchNotes } from '@/api/note.api'
 import useNotes from '@/hooks/useNotes'
 import config from '@/app.config'
+import useSWR from 'swr'
+import useSaveNotes from '@/hooks/useSaveNotes'
 
 export default function useNotesData() {
   const setNotes = useNotes(useShallow(state => state.setNotes))
@@ -21,12 +23,27 @@ export default function useNotesData() {
       dedupingInterval: 500,
       onSuccess: (pages) => {
         log('fetch data', pages)
-        const allNotes = pages.flatMap(p => p.data)
+        const allNotes = pages.flatMap(p => Array.isArray(p) ? p : p.data )
         setNotes(allNotes)
       }
     }
   )
   const loadMore = () => setSize(size + 1)
-  const hasMore = data && data[data.length - 1]?.data.length == page_size
-  return { isLoading, error, mutateNote: mutate, loadMore, hasMore }  
+  const lastPage = data?.[data.length - 1]
+  const hasMore = Array.isArray(lastPage) ? lastPage : (lastPage?.data ?? [])
+  
+  return { isLoading, error, mutateNote: mutate, loadMore, hasMore }
+}
+
+export function useSaveNotesData() {
+  const key = '/api/notes?is_save=1';
+  const { data, mutate, error, isLoading } = useSWR(key, FetchNotes, {
+    revalidateOnFocus: true,
+    dedupingInterval: 500,
+    onSuccess: (notes) => {
+      if (Array.isArray(notes)) useSaveNotes.getState().setSaveNotes(notes)
+    }
+  }) 
+  
+  return { saveNotes: data, mutateSaveNote: mutate, error, isLoading }
 }
