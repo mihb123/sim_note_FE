@@ -12,12 +12,14 @@ type tabId = typeof tabIcons[number]['id'];
 export const SidebarHeader = memo(() => {
   const closeSidebar = useSidebarStateOpen(s => s.closeSidebar);
   const setActiveTab = useActiveTab((state) => state.setActiveTab)
+  const activeTab = useActiveTab((state) => state.activeTab)
+
   const { mutateSaveNote } = useSaveNotesData();
   const handleClick = useCallback((id: tabId) => {
     setActiveTab(id)
-    mutateSaveNote()
+    if (id == 'save') mutateSaveNote();    
   }, [setActiveTab]);
-  const activeTab = useActiveTab((state) => state.activeTab)
+  
 
   return (
     <div className="flex p-2 mx-2 border-b border-sidebar-border sidebar_header">

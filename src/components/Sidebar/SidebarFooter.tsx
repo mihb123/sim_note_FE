@@ -13,7 +13,7 @@ export const SidebarFooter = memo(() => {
   const {user} = useUser();
   
   return (
-    <div className="flex px-3 py-2 bg-sidebar">
+    <div className="flex px-3 py-2 bg-sidebar border-t border-sidebar-border">
       {user && <Button variant="outline" onClick={Logout} className="hover:cursor-pointer text-sidebar-text hover:text-sidebar-foreground">
         Logout
       </Button>}

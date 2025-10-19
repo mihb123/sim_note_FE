@@ -12,7 +12,7 @@ export default function NoteContent() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0">
+    <div className="flex-1 flex flex-col h-screen">
       <div className="statusBar flex p-3 shrink-0">
         {!isSidebarOpen && <PanelLeftOpen className="mr-auto" onClick={openSidebar} />}
         <div className="flex gap-4 ml-auto">

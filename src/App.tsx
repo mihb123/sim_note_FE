@@ -3,6 +3,8 @@ import NoteContent from "./components/NoteContent";
 import "@/styles//App.css";
 import { ThemeProvider } from "@/components/Toggle_theme/theme-provider";
 import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";
+import { Toaster } from "@/components/ui/sonner"
+
 export default function App() {
   const { isOpen } = useSidebarStateOpen();
 
@@ -12,6 +14,7 @@ export default function App() {
         {isOpen && <Sidebar />}
         <NoteContent />
       </main>
+      <Toaster />
     </ThemeProvider>
   );
 }

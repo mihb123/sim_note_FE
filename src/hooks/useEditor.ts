@@ -1,8 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, createElement } from "react";
 import { EditorView, basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
+import { search, searchKeymap, searchPanelOpen, openSearchPanel } from "@codemirror/search";
+import { keymap, type Panel } from "@codemirror/view"
+import { createRoot } from "react-dom/client";
+import SearchPanel, { toggleReplaceEffect } from "@/components/SearchPanel";
 
 export interface EditorInfo {
   words: number;
@@ -35,7 +39,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   };
 
   useEffect(() => {
-    if (!editorRef.current || view) return; // prevent re-init
+    if (!editorRef.current || view) return;
 
     const updateListener = EditorView.updateListener.of((update) => {
       if (update.docChanged) {
@@ -45,12 +49,39 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       }
     });
 
+    const mySearchPanel = (view: EditorView): Panel => {
+      const dom = document.createElement("div");
+      dom.className = "cm-search-custom";
+      dom.setAttribute("main-field", "true");
+      const root = createRoot(dom);
+      root.render(createElement(SearchPanel, { view }));
+
+      return {
+        dom,
+        top: true,
+        destroy: () => root.unmount(),
+      };
+    }
+
     const state = EditorState.create({
       doc: initialContent,
       extensions: [
+        search({ top: true, createPanel: mySearchPanel }),
         basicSetup,
         updateListener,
         EditorView.lineWrapping,
+        keymap.of([...searchKeymap,
+        {
+          key: "Mod-h",
+          run: (view) => {
+            if (!searchPanelOpen(view.state)) openSearchPanel(view);
+            setTimeout(() => {
+              view.dispatch({ effects: toggleReplaceEffect.of(true) });
+            }, 0);
+            return true;
+          },
+        },
+        ]),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
       ],
     });
@@ -61,7 +92,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
     });
 
     setView(editorView);
-    log("Editor initialized")
+    console.log("Editor initialized")
     return () => {
       editorView.destroy();
       setView(null);

@@ -37,7 +37,7 @@ export const NoteList = memo(() => {
 
     if (isInitialLoad) {
       const selectedNoteEl = noteListRef.current.querySelector(`[data-note-id="${focusNote.id}"]`);
-      selectedNoteEl?.scrollIntoView({ block: "center" });
+      selectedNoteEl?.scrollIntoView({ block: "center", behavior: "smooth" });
       setIsInitialLoad(false);
     }
 
@@ -63,7 +63,7 @@ export const NoteList = memo(() => {
   const isInitialLoading = isLoading && Object.keys(notes).length === 0;
 
   return (
-    <div ref={noteListRef} onScroll={handleScroll} className="noteList flex-1 overflow-y-auto flex flex-col px-4 mr-2">
+    <div ref={noteListRef} onScroll={handleScroll} className="noteList overflow-y-auto px-3 mr-2">
       {isInitialLoading ? (
         Array.from({ length: 10 }).map((_, index) => <NoteItemSkeleton key={index} />)
       ) : (
