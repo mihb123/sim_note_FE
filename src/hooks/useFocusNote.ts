@@ -1,7 +1,6 @@
 import type { Note } from "@/types";
 import { create } from 'zustand';
 import useNotes from '@/hooks/useNotes';
-import useSaveNotes from "./useSaveNotes";
 import { EditorView } from 'codemirror';
 
 interface FocusNoteStore {
@@ -15,8 +14,7 @@ const useFocusNote = create<FocusNoteStore>((set) => ({
   focusNote: null,
   setFocusNote: (id) => {
     const notes = useNotes.getState().notes;
-    const saveNotes = useSaveNotes.getState().saveNotes;
-    const focusNote = notes[id] || saveNotes.find(note => note.id == id);
+    const focusNote = notes[id] || null;
     localStorage.setItem("focusNoteId", id);
     set({ focusNote: focusNote});
   },

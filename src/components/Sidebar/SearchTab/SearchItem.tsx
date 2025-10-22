@@ -5,6 +5,7 @@ import { ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import type { Note } from "@/types";
 import { EditorView } from '@codemirror/view';
 import { EditorSelection } from '@codemirror/state';
+import useSelectNote from "@/hooks/useSelectNote";
 
 interface SearchResultItemProps {
   note: Note;
@@ -19,9 +20,10 @@ interface lines {
 const SearchItem = ({ note, searchVal }: SearchResultItemProps) => {
   const setFocusNote = useFocusNote(state => state.setFocusNote);
   const lastPosRef = useRef<number | null>(null);
-
-  const handleSelect = useCallback((id: string, lineIndex?: number, from?: number) => {
-    setFocusNote(id);    
+  const selectNoteHandler = useSelectNote();
+  
+  const handleSelect = useCallback((lineIndex?: number, from?: number) => {
+    selectNoteHandler(note)   
     setTimeout(() => {
       if (lineIndex === undefined || from === undefined) return;
       const newView = useFocusNote.getState().view;
@@ -85,7 +87,7 @@ const SearchItem = ({ note, searchVal }: SearchResultItemProps) => {
 
   return (
     <ItemContent className="mb-3">
-      <ItemTitle className="pb-1 flex w-full hover:cursor-pointer" onClick={() => handleSelect(note.id)}>
+      <ItemTitle className="pb-1 flex w-full hover:cursor-pointer" onClick={() => handleSelect}>
         <span className="dark:text-gray-400 text-gray-600">{_hTitle}</span>
         <span className="ml-auto dark:text-gray-500 text-gray-400 pr-1">{matchLines.length > 1 && matchLines.length }</span>
       </ItemTitle>
@@ -93,7 +95,7 @@ const SearchItem = ({ note, searchVal }: SearchResultItemProps) => {
         line.texts.map((text, index) => {
           const _hText = highlightJSX(text.text, searchVal);
           return (
-            <ItemDescription key={`${line.index}-${index}`} className="rounded p-1 pl-2 bg-gray-100 dark:bg-background line-clamp-4 hover:cursor-pointer" onClick={() => handleSelect(note.id, line.index, text.from)}>{_hText}</ItemDescription>
+            <ItemDescription key={`${line.index}-${index}`} className="rounded p-1 pl-2 bg-gray-100 dark:bg-background line-clamp-4 hover:cursor-pointer" onClick={() => handleSelect(line.index, text.from)}>{_hText}</ItemDescription>
           );
         })
       )}

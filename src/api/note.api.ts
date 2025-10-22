@@ -52,3 +52,13 @@ export const DeleteNote = async (noteId: string): Promise<void> => {
     throw error;
   }
 };
+
+export const FetchNoteId = async (noteId: string): Promise<Note> => {
+  try {
+    const res = await api.get<Note>(`/api/notes/${noteId}`)
+    return res.data
+  } catch (error) {
+    console.error('Error fetching notes:', error)
+    throw error
+  }
+}

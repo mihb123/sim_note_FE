@@ -87,7 +87,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
           run: openReplace
         },
         ]),
-        markdown({ base: markdownLanguage, codeLanguages: languages }),
+        markdown({ base: markdownLanguage, codeLanguages: languages, addKeymap: true }),
       ],
     });
 

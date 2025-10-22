@@ -1,16 +1,17 @@
-import useFocusNote from "@/hooks/useFocusNote";
 import type { Note } from "@/types";
-import { useShallow } from "zustand/shallow";
-import {memo, useCallback} from "react";
+import {memo} from "react";
+import useSelectNote from "@/hooks/useSelectNote";
 
 interface NoteItemProps {
   note: Note;
   isSelected: boolean;
 }
 export const NoteItem = memo(({ note, isSelected }: NoteItemProps) => {
-  const setFocusNote = useFocusNote(useShallow((state) => state.setFocusNote));
-  const selectNote = useCallback(() => setFocusNote(note.id), [setFocusNote, note]);
-  // log("Render NoteItem: ", note.id);  
+  const selectNoteHandler = useSelectNote();
+  const selectNote = () => {
+    selectNoteHandler(note);
+  };
+  // log("Render NoteItem: ", note.id);
   
   return (
   <div

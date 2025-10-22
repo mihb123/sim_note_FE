@@ -28,8 +28,7 @@ export const NoteList = memo(() => {
   if (Array.isArray(saveNotes) && activeTab == 'save') noteList = saveNotes;
 
   let savedNoteId = localStorage.getItem("focusNoteId") || "";
-  const findNote = (savedNoteId) ? saveNotes.find(note => note.id == savedNoteId) : null;
-  if (!notes[savedNoteId]) savedNoteId = findNote?.id || sortedNotes[0]?.id;
+  if (!notes[savedNoteId]) savedNoteId = noteList[0]?.id;
   if (savedNoteId != undefined) setFocusNote(savedNoteId);
 
   useEffect(() => {

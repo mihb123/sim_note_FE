@@ -1,0 +1,102 @@
+/* CodeMirror root */
+#sim_editor .cm-editor {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  overflow-x: hidden !important;
+}
+
+/* Remove line numbers */
+#sim_editor .cm-gutters {
+  display: none !important;
+}
+
+/* Active line highlight */
+#sim_editor .cm-activeLine {
+  background-color: hsl(var(--muted)) !important;
+}
+
+/* Scrollbar styling */
+#sim_editor .cm-scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+#sim_editor .cm-scroller::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 5px;
+}
+
+#sim_editor .cm-scroller::-webkit-scrollbar-track {
+  background-color: hsl(var(--muted) / 0.5);
+}
+#sim_editor .cm-scroller {
+  font-size: 16px;
+  font-family: var(
+    --default-font-family,
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji"
+  );
+  line-height: 1.4;
+}
+
+#sim_editor .cm-line {
+  padding: 2px 0.5rem;
+}
+
+.dark #sim_editor .cm-cursor {
+  border-left: 2px solid oklch(0.985 0 0) !important;
+}
+
+.ͼ2 .cm-panels-top {
+  border-bottom: none;
+}
+
+.ͼ4 .cm-line ::selection,
+.ͼ4 .cm-line::selection,
+.ͼ4 .cm-line::file-selector-button {
+  color: rgb(44, 44, 44);
+  border-radius: 4px !important;
+}
+
+.dark .ͼ4 .cm-line ::selection,
+.dark .ͼ4 .cm-line::selection {
+  color: rgb(48, 47, 47);
+  border-radius: 0.25rem !important;
+}
+
+.cm-line .cm-selectionMatch {
+  background-color: #facc15;
+  color: #1f2937;
+  border-radius: 0.25rem;
+}
+.dark .cm-line .cm-searchMatch.cm-searchMatch-selected {
+  background-color: #1ef867;
+  color: #111111;
+  border-radius: 0.25rem;
+}
+.dark .cm-line .cm-searchMatch,
+.dark .search_matches {
+  background-color: #0f8a38;
+  color: #030303;
+  border-radius: 0.25rem;
+}
+
+.cm-line .cm-searchMatch,
+.search_matches {
+  background-color: #e2e050;
+  color: #4b4a4a;
+  border-radius: 0.25rem;
+}
+
+.cm-line .cm-searchMatch-selected {
+  background-color: #acaa3d;
+  color: #1f1e1e;
+  border-radius: 0.25rem;
+}

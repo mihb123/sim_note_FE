@@ -13,6 +13,7 @@ interface NoteStore {
   updateNote: (newNote: Note) => void;
   addNoteToStore: (note: temp | Note) => void;
   deleteNoteFromStore: (id: string) => void;
+  mergeNotes: (newNotes: Note[]) => void;
 }
 
 const useNotes = create<NoteStore>((set) => ({
@@ -33,6 +34,13 @@ const useNotes = create<NoteStore>((set) => ({
     const newNotes = { ...state.notes };
     delete newNotes[id];
     return { notes: newNotes };
+  }),
+  mergeNotes: (newNotes) => set((state) => {
+    const newNotesMap = newNotes.reduce((acc, note) => {
+      acc[note.id] = note;
+      return acc;
+    }, {} as NotesMap);
+    return { notes: { ...state.notes, ...newNotesMap } };
   }),
 }));
 

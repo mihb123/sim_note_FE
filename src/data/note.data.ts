@@ -1,13 +1,11 @@
 import useSWRInfinite from 'swr/infinite'
-import { useShallow } from 'zustand/shallow'
-import { FetchNotes } from '@/api/note.api'
+import { FetchNoteId, FetchNotes } from '@/api/note.api'
 import useNotes from '@/hooks/useNotes'
 import config from '@/app.config'
 import useSWR from 'swr'
 import useSaveNotes from '@/hooks/useSaveNotes'
 
 export default function useNotesData() {
-  const setNotes = useNotes(useShallow(state => state.setNotes))
   const page_size = config.PAGE_SIZE;
 
   const getKey = (pageIndex: number, previousPageData: any) => {
@@ -21,7 +19,7 @@ export default function useNotesData() {
     {
       onSuccess: (pages) => {
         const allNotes = pages.flatMap(p => Array.isArray(p) ? p : p.data)
-        setNotes(allNotes)
+        size == 1 ? useNotes.getState().setNotes(allNotes) : useNotes.getState().mergeNotes(allNotes)
       }
     }
   )
@@ -49,4 +47,16 @@ export function useSearchNoteData(keyword: string) {
   const { data, error, mutate, isLoading } = useSWR(key, FetchNotes)
 
   return { searchNotes: data, mutateSearchNotes: mutate, error, isLoading }
+}
+
+export function useNoteId(id: string) {
+  const key = id ?? null;
+  const { data, error, mutate, isLoading } = useSWR(key, FetchNoteId, {
+    onSuccess: (note) => {
+      log("note ", note)
+      useNotes.getState().addNoteToStore(note)
+    }
+  })
+
+  return { note: data, mutateNoteId: mutate, error, isLoading }
 }

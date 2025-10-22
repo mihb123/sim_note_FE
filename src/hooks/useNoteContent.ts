@@ -5,6 +5,7 @@ import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
 import useFocusNote from "@/hooks/useFocusNote";
 import useDebounce from "@/hooks/useDebounce";
+import { EditorSelection } from "@codemirror/state";
 
 const useNoteContent = () => {
   // 1. Select state from stores using useShallow for optimization
@@ -24,9 +25,12 @@ const useNoteContent = () => {
       if (prevFocusNoteId.current != focusNote.id) {
         const newContent = `# ${focusNote.title}\n${focusNote.content}`;
         const currentEditorDoc = view.state.doc.toString();
+        if (!view.hasFocus) view.focus()
+        const pos = view.state.doc.line(1).from
         if (currentEditorDoc !== newContent) {
           view.dispatch({
-            changes: { from: 0, to: currentEditorDoc.length, insert: newContent }
+            changes: { from: 0, to: currentEditorDoc.length, insert: newContent },
+            selection: EditorSelection.cursor(pos),
           });
         }
         setIsSaved(focusNote.is_save);
@@ -35,7 +39,6 @@ const useNoteContent = () => {
       }
       prevFocusNoteId.current = focusNote.id;
     }
-    view?.focus()
   }, [focusNote, view, updateInfo]);
 
   // 4. Debounced save logic
