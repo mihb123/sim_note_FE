@@ -10,7 +10,7 @@ interface NoteItemProps {
 export const NoteItem = memo(({ note, isSelected }: NoteItemProps) => {
   const setFocusNote = useFocusNote(useShallow((state) => state.setFocusNote));
   const selectNote = useCallback(() => setFocusNote(note.id), [setFocusNote, note]);
-  log("Render NoteItem: ", note.id);  
+  // log("Render NoteItem: ", note.id);  
   
   return (
   <div

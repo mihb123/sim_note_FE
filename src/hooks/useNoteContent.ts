@@ -4,7 +4,7 @@ import useNotes from '@/hooks/useNotes';
 import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
 import useFocusNote from "@/hooks/useFocusNote";
-import useDebounce from "./useDebounce";
+import useDebounce from "@/hooks/useDebounce";
 
 const useNoteContent = () => {
   // 1. Select state from stores using useShallow for optimization
@@ -35,6 +35,7 @@ const useNoteContent = () => {
       }
       prevFocusNoteId.current = focusNote.id;
     }
+    view?.focus()
   }, [focusNote, view, updateInfo]);
 
   // 4. Debounced save logic

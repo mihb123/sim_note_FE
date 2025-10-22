@@ -19,10 +19,8 @@ export default function useNotesData() {
     getKey,
     FetchNotes,
     {
-      revalidateOnFocus: false,
-      dedupingInterval: 500,
       onSuccess: (pages) => {
-        const allNotes = pages.flatMap(p => Array.isArray(p) ? p : p.data )
+        const allNotes = pages.flatMap(p => Array.isArray(p) ? p : p.data)
         setNotes(allNotes)
       }
     }
@@ -30,29 +28,25 @@ export default function useNotesData() {
   const loadMore = () => setSize(size + 1)
   const lastPage = data?.[data.length - 1]
   const hasMore = Array.isArray(lastPage) ? lastPage : (lastPage?.data ?? [])
-  
+
   return { isLoading, error, mutateNote: mutate, loadMore, hasMore: !!hasMore.length }
 }
 
 export function useSaveNotesData() {
   const key = '/api/notes?is_save=1';
-  const { data, mutate, error, isLoading } = useSWR(key, FetchNotes, {
-    revalidateOnFocus: false,
-    dedupingInterval: 500,
-    onSuccess: (notes) => {
-      if (Array.isArray(notes)) useSaveNotes.getState().setSaveNotes(notes)
-    }
-  }) 
-  
+  const { data, mutate, error, isLoading } = useSWR(key, FetchNotes,
+    {
+      onSuccess: (notes) => {
+        if (Array.isArray(notes)) useSaveNotes.getState().setSaveNotes(notes)
+      }
+    })
+
   return { saveNotes: data, mutateSaveNote: mutate, error, isLoading }
 }
 
-export function useSearchNoteData({ keyword }: { keyword: string }) {
+export function useSearchNoteData(keyword: string) {
   const key = keyword ? `/api/notes?search=${keyword}` : null;
-  const { data, error, isLoading } = useSWR(key, FetchNotes, {
-    revalidateOnFocus: false,
-    dedupingInterval: 500
-  })
+  const { data, error, mutate, isLoading } = useSWR(key, FetchNotes)
 
-  return { searchNotes: data, error, isLoading }  
+  return { searchNotes: data, mutateSearchNotes: mutate, error, isLoading }
 }

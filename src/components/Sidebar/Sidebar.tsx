@@ -6,7 +6,7 @@ import { SidebarFooter } from "@/components/Sidebar/SidebarFooter";
 import SidebarResizer from "./SidebarResize";
 import useSidebarResize from "@/hooks/useSidebarResize";
 import useActiveTab from '@/hooks/useActiveTab';
-import SearchTab from '@/components/Sidebar/SearchTab';
+import SearchTab from '@/components/Sidebar/SearchTab/SearchTab';
 
 export default function Sidebar() {  
   const { width, startResize } = useSidebarResize();

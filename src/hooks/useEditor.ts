@@ -6,7 +6,9 @@ import { languages } from "@codemirror/language-data";
 import { search, searchKeymap, searchPanelOpen, openSearchPanel } from "@codemirror/search";
 import { keymap, type Panel } from "@codemirror/view"
 import { createRoot } from "react-dom/client";
-import SearchPanel, { toggleReplaceEffect } from "@/components/SearchPanel";
+import SearchPanel from "@/components/SearchPanel";
+import { toggleReplaceEffect } from "@/hooks/useSearchPanel";
+import useFocusNote from "@/hooks/useFocusNote";
 
 export interface EditorInfo {
   words: number;
@@ -21,7 +23,8 @@ interface UseEditorProps {
 
 export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState<EditorView | null>(null);
+  const setEditorView = useFocusNote(state => state.setEditorView);
+  const view = useFocusNote(state => state.view);
   const [info, setInfo] = useState<EditorInfo>({ words: 0, lines: 0, chars: 0 });
   const onDocChangeRef = useRef(onDocChange);
 
@@ -63,23 +66,25 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       };
     }
 
+    const openReplace = (view: EditorView) => {
+      if (!searchPanelOpen(view.state)) openSearchPanel(view);
+      setTimeout(() => {
+        view.dispatch({ effects: toggleReplaceEffect.of(true) });
+      }, 0);
+      return true;
+    }
+
     const state = EditorState.create({
       doc: initialContent,
       extensions: [
-        search({ top: true, createPanel: mySearchPanel }),
+        search({ createPanel: mySearchPanel }),
         basicSetup,
         updateListener,
         EditorView.lineWrapping,
         keymap.of([...searchKeymap,
         {
           key: "Mod-h",
-          run: (view) => {
-            if (!searchPanelOpen(view.state)) openSearchPanel(view);
-            setTimeout(() => {
-              view.dispatch({ effects: toggleReplaceEffect.of(true) });
-            }, 0);
-            return true;
-          },
+          run: openReplace
         },
         ]),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
@@ -91,11 +96,11 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       parent: editorRef.current,
     });
 
-    setView(editorView);
+    setEditorView(editorView);
     console.log("Editor initialized")
     return () => {
       editorView.destroy();
-      setView(null);
+      setEditorView(null);
     };
   }, []);
 
