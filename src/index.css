@@ -126,3 +126,77 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  #sim_editor .h1 {
+    @apply text-4xl font-extrabold tracking-tight pb-2 text-foreground;
+  }
+
+  #sim_editor .h2 {
+    @apply text-3xl font-semibold tracking-tight pb-2 text-foreground;
+  }
+
+  #sim_editor .h3 {
+    @apply text-2xl font-semibold tracking-tight text-foreground;
+  }
+
+  #sim_editor .h4 {
+    @apply text-xl font-semibold tracking-tight text-foreground;
+  }
+
+  #sim_editor p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+
+  #sim_editor blockquote {
+    @apply mt-6 border-l-2 pl-6 italic text-muted-foreground;
+  }
+
+  #sim_editor ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  #sim_editor ol {
+    @apply my-6 ml-6 list-decimal [&>li]:mt-2;
+  }
+
+  #sim_editor code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
+  }
+
+  #sim_editor pre {
+    @apply mb-4 mt-6 overflow-x-auto rounded-lg border bg-muted p-4;
+  }
+
+  #sim_editor pre code {
+    @apply bg-transparent p-0 text-sm;
+  }
+
+  #sim_editor table {
+    @apply my-6 w-full;
+  }
+
+  #sim_editor th {
+    @apply border px-4 py-2 text-left font-bold;
+  }
+
+  #sim_editor td {
+    @apply border px-4 py-2 align-top;
+  }
+
+  #sim_editor a {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+
+  /* #sim_editor img {
+    @apply rounded-md border;
+  } */
+
+  #sim_editor hr {
+    @apply my-4 border-muted;
+  }
+
+  #sim_editor strong {
+    @apply font-semibold text-foreground;
+  }
+}

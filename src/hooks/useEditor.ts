@@ -1,14 +1,20 @@
 import { useEffect, useState, useRef, createElement } from "react";
 import { EditorView, basicSetup } from "codemirror";
-import { EditorState } from "@codemirror/state";
+import { EditorState, Compartment } from "@codemirror/state";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import { search, searchKeymap, searchPanelOpen, openSearchPanel } from "@codemirror/search";
 import { keymap, type Panel } from "@codemirror/view"
 import { createRoot } from "react-dom/client";
 import SearchPanel from "@/components/SearchPanel";
+import { useTheme } from "@/components/Toggle_theme/theme-provider"
 import { toggleReplaceEffect } from "@/hooks/useSearchPanel";
 import useFocusNote from "@/hooks/useFocusNote";
+import { materialLight } from '@ddietr/codemirror-themes/material-light'
+import { materialDark } from '@ddietr/codemirror-themes/material-dark'
+import { headingField } from "../components/editor/heading";
+import toggleBold from "@/components/editor/bold";
+import toggleItalic from "@/components/editor/italic";
 
 export interface EditorInfo {
   words: number;
@@ -27,6 +33,8 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   const view = useFocusNote(state => state.view);
   const [info, setInfo] = useState<EditorInfo>({ words: 0, lines: 0, chars: 0 });
   const onDocChangeRef = useRef(onDocChange);
+  const { theme } = useTheme();
+  const themeCompartment = useRef(new Compartment());
 
   // keep latest callback reference without triggering effect
   useEffect(() => {
@@ -40,6 +48,14 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       chars: text.length,
     });
   };
+
+  useEffect(() => {
+    if (view) {
+      view.dispatch({
+        effects: themeCompartment.current.reconfigure(theme === 'light' ? materialLight : materialDark)
+      })
+    }
+  }, [theme, view])
 
   useEffect(() => {
     if (!editorRef.current || view) return;
@@ -78,6 +94,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       doc: initialContent,
       extensions: [
         search({ createPanel: mySearchPanel }),
+        themeCompartment.current.of(theme === 'light' ? materialLight : materialDark),
         basicSetup,
         updateListener,
         EditorView.lineWrapping,
@@ -86,7 +103,16 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
           key: "Mod-h",
           run: openReplace
         },
+        {
+          key: "Mod-b",
+          run: toggleBold
+        },
+        {
+          key: "Alt-i",
+          run: toggleItalic
+        }
         ]),
+        headingField,
         markdown({ base: markdownLanguage, codeLanguages: languages, addKeymap: true }),
       ],
     });
@@ -95,6 +121,10 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       state,
       parent: editorRef.current,
     });
+
+    // Log all active keymaps from the editor state
+    // This inspects the keymap facet which collects keybindings from all extensions
+    // console.log("Active keymaps:", (state.facet(keymap) as any[]).flat());
 
     setEditorView(editorView);
     console.log("Editor initialized")

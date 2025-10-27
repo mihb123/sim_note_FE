@@ -54,7 +54,7 @@ const useNoteContent = () => {
     }
   }, [currentDoc, focusNote], 500);
 
-  return { editorRef, info, isSaved, setIsSaved, handleSave};
+  return { editorRef, info, isSaved, setIsSaved, handleSave, currentDoc };
 };
 
 export default useNoteContent;

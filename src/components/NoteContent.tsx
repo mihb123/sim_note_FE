@@ -5,14 +5,14 @@ import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";
 export default function NoteContent() {
   const isSidebarOpen = useSidebarStateOpen((state) => state.isOpen);
   const openSidebar = useSidebarStateOpen((state) => state.openSidebar);
-  const { editorRef, info, isSaved, setIsSaved, handleSave} = useNoteContent();
+  const { editorRef, info, isSaved, setIsSaved, handleSave } = useNoteContent();
   const saveNote = () => {    
     setIsSaved(!isSaved);
     handleSave(!isSaved);
   }
 
   return (
-    <div className="flex-1 flex flex-col h-screen">
+    <div className="flex-1 flex flex-col h-screen overflow-x-auto overflow-y-auto">
       <div className="statusBar flex p-3 shrink-0">
         {!isSidebarOpen && <PanelLeftOpen className="mr-auto" onClick={openSidebar} />}
         <div className="flex gap-4 ml-auto">
@@ -21,7 +21,7 @@ export default function NoteContent() {
           <PanelRight />
         </div>
       </div>
-      <div ref={editorRef} className="flex-1 overflow-y-auto pl-10 pr-4" id="sim_editor"></div>
+      <div ref={editorRef} className={`flex-1 flex overflow-y-auto pl-10 pr-4`} id="sim_editor"></div>
       <div className="text-sm text-gray-500 p-2 ml-auto">
         {info.lines} lines | {info.words} words | {info.chars} chars
       </div>

@@ -19,16 +19,18 @@
 }
 
 /* Scrollbar styling */
-#sim_editor .cm-scroller::-webkit-scrollbar {
+#sim_editor .cm-scroller::-webkit-scrollbar, .sim_editor::-webkit-scrollbar {
   width: 8px;
 }
 
-#sim_editor .cm-scroller::-webkit-scrollbar-thumb {
+#sim_editor .cm-scroller::-webkit-scrollbar-thumb,
+.sim_editor::-webkit-scrollbar-thumb {
   background-color: rgba(100, 100, 100, 0.5);
   border-radius: 5px;
 }
 
-#sim_editor .cm-scroller::-webkit-scrollbar-track {
+#sim_editor .cm-scroller::-webkit-scrollbar-track,
+.sim_editor::-webkit-scrollbar-track {
   background-color: hsl(var(--muted) / 0.5);
 }
 #sim_editor .cm-scroller {
@@ -54,28 +56,26 @@
   border-left: 2px solid oklch(0.985 0 0) !important;
 }
 
-.ͼ2 .cm-panels-top {
+.ͼ2 .cm-panels-top,
+.ͼo .cm-panels.cm-panels-top {
   border-bottom: none;
 }
 
-.ͼ4 .cm-line ::selection,
+.dark .ͼ4 .cm-line ::selection,
 .ͼ4 .cm-line::selection,
 .ͼ4 .cm-line::file-selector-button {
-  color: rgb(44, 44, 44);
+  color: rgb(37, 37, 37);
+  background-color: rgb(139, 120, 100) !important;
   border-radius: 4px !important;
 }
 
-.dark .ͼ4 .cm-line ::selection,
-.dark .ͼ4 .cm-line::selection {
-  color: rgb(48, 47, 47);
-  border-radius: 0.25rem !important;
-}
-
-.cm-line .cm-selectionMatch {
+.cm-line .cm-selectionMatch,
+.cm-line .cm-selectionMatch span {
   background-color: #facc15;
-  color: #1f2937;
+  color: #111111;
   border-radius: 0.25rem;
 }
+
 .dark .cm-line .cm-searchMatch.cm-searchMatch-selected {
   background-color: #1ef867;
   color: #111111;
@@ -100,3 +100,14 @@
   color: #1f1e1e;
   border-radius: 0.25rem;
 }
+
+.ͼ19, .ͼo{
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* .wmde-markdown pre code .code-line, .wmde-markdown pre code, .wmde-markdown pre > code {
+  padding: 0px !important;
+  display: inline;
+} */
+
