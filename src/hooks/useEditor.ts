@@ -3,7 +3,7 @@ import { EditorView, basicSetup } from "codemirror";
 import { EditorState, Compartment } from "@codemirror/state";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import { search, searchKeymap, searchPanelOpen, openSearchPanel } from "@codemirror/search";
+import { search, searchPanelOpen, openSearchPanel } from "@codemirror/search";
 import { keymap, type Panel } from "@codemirror/view"
 import { createRoot } from "react-dom/client";
 import SearchPanel from "@/components/SearchPanel";
@@ -12,8 +12,9 @@ import { toggleReplaceEffect } from "@/hooks/useSearchPanel";
 import useFocusNote from "@/hooks/useFocusNote";
 import { materialLight } from '@ddietr/codemirror-themes/material-light'
 import { materialDark } from '@ddietr/codemirror-themes/material-dark'
-import { headingField } from "../components/editor/heading";
+import { LivePreview } from "@/components/editor/Preview";
 import toggleBold from "@/components/editor/bold";
+import { imagePlugin } from "@/components/editor/image";
 import toggleItalic from "@/components/editor/italic";
 
 export interface EditorInfo {
@@ -94,26 +95,18 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       doc: initialContent,
       extensions: [
         search({ createPanel: mySearchPanel }),
+        markdown({ base: markdownLanguage, codeLanguages: languages, addKeymap: true }),
         themeCompartment.current.of(theme === 'light' ? materialLight : materialDark),
         basicSetup,
         updateListener,
         EditorView.lineWrapping,
-        keymap.of([...searchKeymap,
-        {
-          key: "Mod-h",
-          run: openReplace
-        },
-        {
-          key: "Mod-b",
-          run: toggleBold
-        },
-        {
-          key: "Alt-i",
-          run: toggleItalic
-        }
+        keymap.of([
+        { key: "Mod-h", run: openReplace },
+        { key: "Mod-b", run: toggleBold },
+        { key: "Alt-i", run: toggleItalic }
         ]),
-        headingField,
-        markdown({ base: markdownLanguage, codeLanguages: languages, addKeymap: true }),
+        LivePreview,
+        imagePlugin,
       ],
     });
 

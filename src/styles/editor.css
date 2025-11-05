@@ -57,16 +57,15 @@
 }
 
 .ͼ2 .cm-panels-top,
-.ͼo .cm-panels.cm-panels-top {
+.ͼo .cm-panels.cm-panels-top,
+.ͼ19 .cm-panels.cm-panels-top {
   border-bottom: none;
 }
 
 .dark .ͼ4 .cm-line ::selection,
-.ͼ4 .cm-line::selection,
-.ͼ4 .cm-line::file-selector-button {
-  color: rgb(37, 37, 37);
-  background-color: rgb(139, 120, 100) !important;
-  border-radius: 4px !important;
+.ͼ4 .cm-line::selection {
+  color: lightcyan;
+  background-color: rgb(40, 85, 152)!important;
 }
 
 .cm-line .cm-selectionMatch,
@@ -81,10 +80,12 @@
   color: #111111;
   border-radius: 0.25rem;
 }
+
 .dark .cm-line .cm-searchMatch,
-.dark .search_matches {
+.dark .search_matches,
+.ͼo .cm-line .cm-searchMatch.cm-searchMatch-selected{
   background-color: #0f8a38;
-  color: #030303;
+  color: #111111;
   border-radius: 0.25rem;
 }
 
@@ -106,8 +107,51 @@
   color: var(--foreground);
 }
 
-/* .wmde-markdown pre code .code-line, .wmde-markdown pre code, .wmde-markdown pre > code {
-  padding: 0px !important;
-  display: inline;
-} */
+/* task list style */
+.cm-task-marker input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  cursor: pointer;
+  vertical-align: middle;
+  position: relative;
+}
 
+.cm-task-marker input[type="checkbox"]:checked {
+  background: #4caf50;
+  border-color: #4caf50;
+}
+
+.cm-task-marker input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 3px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.cm-line .ͼ1d,
+.cm-line .ͼs {
+  color: gray;
+}
+
+.cm-line.cm-codeBlock {
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+  background: #f6f8fa;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin: 0;
+  /* important to remove gaps between lines */
+}
+
+/* collapse gap between adjacent decorated lines so they visually join */
+.cm-line.cm-codeBlock+.cm-line.cm-codeBlock {
+  margin-top: 0;
+}

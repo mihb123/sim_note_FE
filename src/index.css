@@ -136,6 +136,14 @@
     @apply text-3xl font-semibold tracking-tight pb-2 text-foreground;
   }
 
+  #sim_editor h1 {
+    @apply text-4xl font-extrabold tracking-tight pb-2 text-foreground;
+  }
+
+  #sim_editor h2 {
+    @apply text-3xl font-semibold tracking-tight pb-2 text-foreground;
+  }
+
   #sim_editor .h3 {
     @apply text-2xl font-semibold tracking-tight text-foreground;
   }
