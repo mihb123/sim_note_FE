@@ -63,8 +63,10 @@
 }
 
 .dark .ͼ4 .cm-line ::selection,
-.ͼ4 .cm-line::selection {
-  color: lightcyan;
+.ͼ4 .cm-line ::selection, .ͼ4 .cm-line::selection,
+.ͼ19 .cm-selectionBackground,
+.ͼ4 .cm-selectionBackground {
+  color: lightcyan!important;
   background-color: rgb(40, 85, 152)!important;
 }
 
@@ -154,4 +156,74 @@
 /* collapse gap between adjacent decorated lines so they visually join */
 .cm-line.cm-codeBlock+.cm-line.cm-codeBlock {
   margin-top: 0;
+}
+
+.code-text {
+  display: block;
+  padding: 4px 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.code-text-empty{
+  padding-left: 4px;
+}
+
+/* Common styles for all lines within a code block */
+#sim_editor .cm-line:has(.code-text),
+#sim_editor .cm-line:has(.code-text-empty),
+.cm-line:has(.code-info), #sim_editor .cm-activeLine:has(.code-info) {
+  background: #f0f0f0 !important;
+  margin-right: 4px;
+}
+
+.dark #sim_editor .cm-line:has(.code-text),
+.dark #sim_editor .cm-line:has(.code-text-empty),
+.dark .cm-line:has(.code-info),
+.dark #sim_editor .cm-activeLine:has(.code-info) {
+  background: #1e1e1e !important;
+}
+/* Padding for text lines */
+#sim_editor .cm-line:has(.code-text), #sim_editor .cm-line:has(.code-text-empty) {
+  padding: 0 !important;
+  padding-left: 12px !important;
+}
+
+/* Styling for the info line (language name) */
+.cm-line:has(.code-info) {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  padding-top: 8px !important;
+  padding-bottom: 12px !important;
+  padding-left: 18px !important;
+  margin-top: 8px;
+}
+
+/* Styling for the last line of a code block */
+#sim_editor .cm-line:has(.end) {
+  padding-bottom: 20px !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.code-info {
+  font-size: 0.9em;
+}
+
+.inline-code {
+  display: inline-block;
+  background-color: rgba(255, 166, 0, 0.226);
+  color: var(--foreground);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+}
+
+.quote-mark {
+  margin-right: 4px;
+  display: inline-block;
+  background-color: rgba(255, 166, 0, 0.226);
+  vertical-align: top;
+  border-radius: 4px;
+  padding: 4px 0.1px;
 }

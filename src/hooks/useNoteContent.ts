@@ -26,7 +26,7 @@ const useNoteContent = () => {
         const newContent = `# ${focusNote.title}\n${focusNote.content}`;
         const currentEditorDoc = view.state.doc.toString();
         if (!view.hasFocus) view.focus()
-        const pos = view.state.doc.line(1).from
+        const pos = view.state.doc.line(1).from + 2
         if (currentEditorDoc !== newContent) {
           view.dispatch({
             changes: { from: 0, to: currentEditorDoc.length, insert: newContent },

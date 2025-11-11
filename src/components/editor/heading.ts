@@ -1,12 +1,24 @@
 import { Range, type Line } from "@codemirror/state";
 import { Decoration, WidgetType } from "@codemirror/view";
 
-class EmptyWidget extends WidgetType {
+export class EmptyWidget extends WidgetType {
+  className: string;
+  content: string | Node;
+
+  constructor(className = "", content: string | Node = "") {
+    super();
+    this.className = className;
+    this.content = content;
+  }
+
   toDOM() {
     const span = document.createElement("span");
+    span.className = this.className;
+    if (typeof this.content === "string") span.innerHTML = this.content;
+    else span.appendChild(this.content);
     return span;
   }
-  eq() { return false; }
+  eq() { return true; }
   ignoreEvent() { return true; }
 }
 
