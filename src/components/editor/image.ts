@@ -120,21 +120,25 @@ function renderPreview(view: EditorView): DecorationSet {
           builder.add(node.from, node.to, Decoration.replace({ widget: new EmptyWidget("inline-code", text) }));
         }
 
-        if (node.name == "QuoteMark") {          
-          builder.add(node.from, node.to, Decoration.replace({ widget: new EmptyWidget("quote-mark", "&nbsp;") }));
-        }
         if (node.name == "Blockquote") {
-          console.log({
-            name: node.name,
-            from: node.from,
-            to: node.to,
-            children: (() => { // Correctly iterate over children
-              const children = [];
-              for (let ch = node.node.firstChild; ch; ch = ch.nextSibling) children.push(ch.name);
-              return children;
-            })(),
-            text: state.doc.sliceString(node.from, node.to)
-          });
+          const text = state.doc.sliceString(node.from, node.to);
+          const lines = text.split("\n");
+          let offset = 0;
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const lineFrom = node.from + offset;
+            const match = line.match(/^(\s*>+\s+)(.*)$/);
+            if (match) {
+              const markEnd = lineFrom + match[1].length;
+              builder.add(lineFrom, markEnd, Decoration.replace({ widget: new EmptyWidget("quote-mark", "&nbsp;") }));
+              const contentStart = lineFrom + match[1].length;
+              const contentEnd = lineFrom + line.length;
+              if (contentStart < contentEnd) {
+                builder.add(contentStart, contentEnd, Decoration.mark({ attributes: { class: "blockquote-content" } }));
+              }
+            }
+            offset += line.length + 1;
+          }
         }
       },
     });

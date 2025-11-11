@@ -227,3 +227,7 @@
   border-radius: 4px;
   padding: 4px 0.1px;
 }
+
+.blockquote-content {
+  color: var(--muted-foreground);
+}
