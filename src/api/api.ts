@@ -9,7 +9,7 @@ const api = axios.create({
 
 // Request Interceptor: Attaches the auth token to every outgoing request.
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem('auth_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -23,11 +23,11 @@ api.interceptors.response.use(
     if (error.response) {
       const { status } = error.response;
       if (status === 401) {
-        localStorage.removeItem('authToken');
-        alert('Your session has expired. Please log in again.');
-        window.location.href = '/auth/login'; 
+        console.error("error: ", error);
+        alert('Invaild credentials or your session has expired. Please try again.');
+        window.location.href = '/auth/login';
       } else if (status === 403) {
-        alert('You do not have permission to perform this action. Please verify your email account.');
+        console.error("error: ", error);
         window.location.href = '/auth/verification';
       }
     }

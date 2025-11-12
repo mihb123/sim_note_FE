@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { loginService, registerService } from '@/features/auth/api/authService';
-import type { LoginData, RegisterData, Fields, FormType} from "@/features/auth/types";
+import type { LoginData, RegisterData, Fields, FormType, AuthResponse} from "@/features/auth/types";
 import { useNavigate } from "react-router-dom";
 
 const initialFields: Fields = {
@@ -73,25 +73,31 @@ export const useAuthForm = (formType: FormType) => {
       submissionData = rest as LoginData;
     }
     
-    const submitAction = formType === 'register' ? registerService : loginService;
-    submitAction(submissionData as any)
-      .then((response: any) => {
-        if (response.token) {
-          localStorage.setItem('authToken', response.token);
-          if (formType === 'login') {
-            navigate('/');
+    if (formType === 'register') {
+      registerService(submissionData as RegisterData)
+        .then((res: AuthResponse) => {
+          if (res.token) {
+            localStorage.setItem('auth_token', res.token)
+            navigate('/')          
           } else {
-            alert(response.message);
-            navigate('/');
+            alert(res.message)
           }
-        }
-      })
-      .catch((error: any) => {
-        console.error('Error:', error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        })
+        .catch((e) => console.error(e))
+        .finally(()=>setIsLoading(false))
+    } else if (formType == 'login') {
+      loginService(submissionData as LoginData)
+        .then((res: AuthResponse) => {
+          if (res.token) {
+            localStorage.setItem('auth_token', res.token)
+            navigate('/')
+          } else {
+            alert(res.message)
+          }
+        })
+        .catch((e) => console.error(e))
+        .finally(() => setIsLoading(false))
+    }
   };
 
   return { fields, errors, handleChange, handleSubmit, isLoading };

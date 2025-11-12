@@ -5,9 +5,8 @@ import { useUser } from "@/data/user.data";
 import { memo } from "react";
 
 export const SidebarFooter = memo(() => {
-  log("Render SidebarFooter")
   const Logout = () => {
-    localStorage.removeItem('authToken');
+    localStorage.clear();
     window.location.href = '/auth/login';
   };
   const {user} = useUser();
