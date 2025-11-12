@@ -13,9 +13,9 @@ import useFocusNote from "@/hooks/useFocusNote";
 import { materialLight } from '@ddietr/codemirror-themes/material-light'
 import { materialDark } from '@ddietr/codemirror-themes/material-dark'
 import { LivePreview } from "@/components/editor/Preview";
-import toggleBold from "@/components/editor/bold";
-import { imagePlugin } from "@/components/editor/image";
-import toggleItalic from "@/components/editor/italic";
+import toggleBold from "@/components/editor/boldCommand";
+import { PreviewPlugin } from "@/components/editor/PreviewPlugin";
+import toggleItalic from "@/components/editor/italicCommand";
 
 export interface EditorInfo {
   words: number;
@@ -106,7 +106,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
         { key: "Alt-i", run: toggleItalic }
         ]),
         LivePreview,
-        imagePlugin,
+        PreviewPlugin,
       ],
     });
 
