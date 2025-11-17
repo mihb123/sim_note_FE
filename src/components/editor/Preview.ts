@@ -47,11 +47,9 @@ export const LivePreview = StateField.define({
     const patched = computeDecos(tr.state, from, to);
 
     const ranges: { from: number; to: number; value: any }[] = [];
-    for (let cursor = patched.iter(); cursor.value != null; cursor.next()) {
-      const rFrom = cursor.from, rTo = cursor.to, val = cursor.value;
-      if (typeof rFrom !== "number" || typeof rTo !== "number" || rFrom >= rTo) continue;
-      ranges.push({ from: rFrom, to: rTo, value: val });
-    }
+    patched.between(0, tr.state.doc.length, (from, to, value) => {
+      if (from < to) ranges.push({ from, to, value });
+    });
 
     return mapped.update({
       filter: (fromA, toA) => toA < from || fromA > to,

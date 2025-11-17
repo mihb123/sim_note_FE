@@ -10,7 +10,7 @@ function renderPreview(view: EditorView, changedNodes?: Set<string>): Decoration
   const activeLine = state.doc.lineAt(state.selection.main.head);
 
   const handlers: Record<string, (node: SyntaxNodeRef) => void> = {
-    Image: (node) => handleImage(builder, state, node),
+    Image: (node) => handleImage(builder, state, node, activeLine),
     StrongEmphasis: (node) => handleStrongEmphasis(builder, node),
     Emphasis: (node) => handleEmphasis(builder, node),
     CodeMark: (node) => handleCodeMark(builder, activeLine, node),
@@ -25,6 +25,10 @@ function renderPreview(view: EditorView, changedNodes?: Set<string>): Decoration
       from,
       to,
       enter: (node) => {
+        if (node.name == "HTMLBlock") {
+          const text = state.doc.sliceString(node.from, node.to);
+          log(text)
+        }
         const handler = handlers[node.name];
         if (handler) {
           if (!changedNodes || changedNodes.has(node.name)) {
@@ -47,38 +51,7 @@ export const PreviewPlugin = ViewPlugin.fromClass(
     }
 
     update(update: ViewUpdate) {
-      if (update.docChanged) {
-        const changedNodes = new Set<string>();
-        
-        update.changes.iterChanges((_, __, fromB, toB) => {
-          const { state } = update.view;
-          syntaxTree(state).iterate({
-            from: fromB,
-            to: toB,
-            enter: (node) => {
-              changedNodes.add(node.name);
-            },
-          });
-        })
-
-        const patched = renderPreview(update.view, changedNodes);
-        const mapped = this.decorations.map(update.changes);
-
-        const keep: { from: number; to: number; value: Decoration }[] = [];
-        mapped.between(0, update.view.state.doc.length, (from, to, value) => {
-          const nodeName = (value.spec as any)?.nodeName;
-          if (!nodeName || !changedNodes.has(nodeName)) keep.push({ from, to, value });
-        });
-
-        const newRanges: { from: number; to: number; value: Decoration }[] = [];
-        patched.between(0, update.view.state.doc.length, (from, to, value) => {
-          newRanges.push({ from, to, value });
-        });
-
-        const merged = [...keep, ...newRanges].sort((a, b) => a.from - b.from);
-        this.decorations = Decoration.set(merged);
-
-      } else if (update.viewportChanged || update.selectionSet) {
+      if (update.viewportChanged || update.selectionSet || update.docChanged) {
         this.decorations = renderPreview(update.view);
       }
     }

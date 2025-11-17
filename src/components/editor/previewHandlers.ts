@@ -44,7 +44,8 @@ function stripDelimiters(builder: RangeSetBuilder<Decoration>, node: SyntaxNodeR
   builder.add(endSuffix, node.to, Decoration.replace({ widget: new EmptyWidget(), nodeName: node.name }));
 }
 
-function handleImage(builder: RangeSetBuilder<Decoration>, state: EditorState, node: SyntaxNodeRef) {
+function handleImage(builder: RangeSetBuilder<Decoration>, state: EditorState, node: SyntaxNodeRef, activeLine?: Line,) {
+  if(isNodeOnActiveLine(node, activeLine!)) return;
   const urlNode = node.node.getChild("URL");
   const altNode = node.node.getChild("ImageDescription");
   if (!urlNode) return;
