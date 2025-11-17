@@ -17,18 +17,41 @@ type Note = {
   updated_at: string;
 };
 
-type NotesMap = Record<string, Note>;
+type NoteMetaData = {
+  id: string;
+  title: string;
+  content: string;
+  user_id: string;
+  is_save: boolean;
+  created_at: string;
+  updated_at: string;
+  note_shares: note_shares[] | [];
+};
+
+type note_shares = {
+  id: string;
+  note_id: string;
+  created_at: string;
+  updated_at: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  }
+}
+
+type NotesMap = Record<string, NoteMetaData>;
 
 interface SaveNoteParams {
   text: string;
-  focusNote: Note
-  updateNote: (note: Note) => void;
+  focusNote: NoteMetaData
+  updateNote: (note: NoteMetaData) => void;
   isSaved: boolean;
 };
 
-interface PaginationResponse<Note> {
+interface PaginationResponse<NoteMetaData> {
   current_page: number
-  data: Note[]
+  data: NoteMetaData[]
   per_page: number
   total: number
   path: string
@@ -42,4 +65,10 @@ interface PaginationResponse<Note> {
   to?: number
 }
 
-export type { User, Note, NotesMap, SaveNoteParams, PaginationResponse };
+interface ShareNoteResponse {
+  message: string;
+  status: string;
+  note: NoteMetaData;
+}
+
+export type { User, Note, NotesMap, SaveNoteParams, PaginationResponse, NoteMetaData, ShareNoteResponse, note_shares };

@@ -1,7 +1,7 @@
 import { useRef, useState, useMemo, useCallback } from "react";
 import { Loader2Icon, SearchIcon } from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { IconCircleX } from "@/components/Icon";
+import { IconCircleX } from "@/components/ui/Icon";
 import { useDebounceFn } from "ahooks";
 import { useSearchNoteData } from "@/data/note.data";
 import { NoteItemSkeleton } from "@/components/Sidebar/NoteItemSkeleton";

@@ -1,4 +1,4 @@
-import type { Note, NotesMap } from "@/types";
+import type { NotesMap, NoteMetaData, Note } from "@/types";
 import { create } from 'zustand';
 
 type temp = {
@@ -9,11 +9,11 @@ type temp = {
 
 interface NoteStore {
   notes: NotesMap;
-  setNotes: (notes: Note[]) => void;
-  updateNote: (newNote: Note) => void;
+  setNotes: (notes: NoteMetaData[]) => void;
+  updateNote: (newNote: NoteMetaData) => void;
   addNoteToStore: (note: temp | Note) => void;
   deleteNoteFromStore: (id: string) => void;
-  mergeNotes: (newNotes: Note[]) => void;
+  mergeNotes: (newNotes: NoteMetaData[]) => void;
 }
 
 const useNotes = create<NoteStore>((set) => ({
@@ -28,7 +28,7 @@ const useNotes = create<NoteStore>((set) => ({
     notes: { ...state.notes, [newNote.id]: newNote },
   })),
   addNoteToStore: (note) => set((state) => ({
-    notes: { ...state.notes, [note.id]: note as Note },
+    notes: { ...state.notes, [note.id]: note as NoteMetaData },
   })),
   deleteNoteFromStore: (id) => set((state) => {
     const newNotes = { ...state.notes };

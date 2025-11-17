@@ -6,7 +6,7 @@ import { languages } from "@codemirror/language-data";
 import { search, searchPanelOpen, openSearchPanel } from "@codemirror/search";
 import { keymap, type Panel } from "@codemirror/view"
 import { createRoot } from "react-dom/client";
-import SearchPanel from "@/components/SearchPanel";
+import SearchPanel from "@/components/editor/SearchPanel";
 import { useTheme } from "@/components/Toggle_theme/theme-provider"
 import { toggleReplaceEffect } from "@/hooks/useSearchPanel";
 import useFocusNote from "@/hooks/useFocusNote";

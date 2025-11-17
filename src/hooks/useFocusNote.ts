@@ -1,10 +1,10 @@
-import type { Note } from "@/types";
+import type { NoteMetaData } from "@/types";
 import { create } from 'zustand';
 import useNotes from '@/hooks/useNotes';
 import { EditorView } from 'codemirror';
 
 interface FocusNoteStore {
-  focusNote: Note | null;
+  focusNote: NoteMetaData | null;
   setFocusNote: (id: string) => void;
   view: EditorView | null;
   setEditorView: (view: EditorView | null) => void;

@@ -4,7 +4,7 @@ interface ActiveTab {
   activeTab: tab,
   setActiveTab: (tab: tab) => void,
 }
-type tab = 'all' | 'search' | 'save';
+type tab = 'all' | 'search' | 'save' | 'shared'
 
 const useActiveTab = create<ActiveTab>((set) => ({
   activeTab: 'all',

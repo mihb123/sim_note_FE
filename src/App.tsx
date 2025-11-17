@@ -1,5 +1,5 @@
 import Sidebar from "./components/Sidebar/Sidebar";
-import NoteContent from "./components/NoteContent";
+import NoteContent from "./components/NoteContent/NoteContent";
 import "@/styles//App.css";
 import { ThemeProvider } from "@/components/Toggle_theme/theme-provider";
 import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";

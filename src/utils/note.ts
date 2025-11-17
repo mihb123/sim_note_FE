@@ -1,4 +1,4 @@
-import type { SaveNoteParams, Note } from "@/types";
+import type { SaveNoteParams, NoteMetaData } from "@/types";
 import { UpdateNote } from "@/api/note.api";
 
 export const saveNote = ({ text, focusNote, updateNote, isSaved }: SaveNoteParams) => {
@@ -6,7 +6,7 @@ export const saveNote = ({ text, focusNote, updateNote, isSaved }: SaveNoteParam
   const title = rawTitle.replace(/^#\s*/, "") || "Untitled";
   const content = body.join("\n");
 
-  const newNote: Note = {
+  const newNote: NoteMetaData = {
     ...focusNote,
     is_save: isSaved,
     title,

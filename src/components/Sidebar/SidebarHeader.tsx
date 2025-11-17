@@ -1,12 +1,14 @@
-import { Bookmark, FolderClosed, PanelRightOpen, Search } from "lucide-react";
+import { Bookmark, FolderClosed, PanelRightOpen, Search, Users } from "lucide-react";
 import { memo, useCallback } from "react";
 import useSidebarStateOpen from "@/hooks/useSidebarStateOpen";
 import useActiveTab from "@/hooks/useActiveTab";
 import { useSaveNotesData } from "@/data/note.data";
+
 export const tabIcons = [
   { id: 'all', icon: FolderClosed },
   { id: 'search', icon: Search },
-  { id: 'save', icon: Bookmark } ] as const;
+  { id: 'save', icon: Bookmark },
+  { id: 'shared', icon: Users }] as const;
 type tabId = typeof tabIcons[number]['id'];
 
 export const SidebarHeader = memo(() => {
