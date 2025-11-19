@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useShallow } from 'zustand/shallow';
 import useNotes from '@/hooks/useNotes';
 import { useEditor } from "@/hooks/useEditor";
 import { saveNote } from "@/utils/note";
@@ -9,8 +8,8 @@ import { EditorSelection } from "@codemirror/state";
 
 const useNoteContent = () => {
   // 1. Select state from stores using useShallow for optimization
-  const updateNote = useNotes(useShallow(state => state.updateNote));
-  const focusNote = useFocusNote(useShallow(state => state.focusNote));
+  const updateNote = useNotes(state => state.updateNote);
+  const focusNote = useFocusNote(state => state.focusNote);
   const prevFocusNoteId = useRef<string | null>(null);
 
   // 2. Editor and content state

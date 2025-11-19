@@ -1,5 +1,5 @@
 import api from '@/api/api';
-import type { Note, NoteMetaData, PaginationResponse, ShareNoteResponse } from '@/types';
+import type { GetSharedNotesResponse, Note, NoteMetaData, PaginationResponse, ShareNoteResponse } from '@/types';
 
 export const FetchNotes = async (url: string): Promise<PaginationResponse<NoteMetaData>> => {
   try {
@@ -80,6 +80,16 @@ export const RemoveCollaborator = async (shareId: string): Promise<ShareNoteResp
     return response.data;
   } catch (error) {
     console.error('Error removing collaborator:', error);
+    throw error;
+  }
+}
+
+export const GetSharedNotes = async (): Promise<GetSharedNotesResponse[]> => {
+  try {
+    const response = await api.get<GetSharedNotesResponse[]>('/api/notes-shared');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching shared notes:', error);
     throw error;
   }
 }

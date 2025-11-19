@@ -5,8 +5,9 @@ import useNotes from '@/hooks/useNotes';
 import { useShallow } from "zustand/shallow";
 import useFocusNote from "@/hooks/useFocusNote";
 import useActiveTab from "@/hooks/useActiveTab";
-import useNotesData, { useSaveNotesData } from "@/data/note.data";
+import useNotesData, { useSaveNotesData, useSharedNotesData } from "@/data/note.data";
 import useSaveNotes from "@/hooks/useSaveNotes";
+import useSharedNotes from "@/hooks/useSharedNote";
 
 export const NoteList = memo(() => {
   const { notes } = useNotes(useShallow(state => ({ notes: state.notes, setNotes: state.setNotes })));
@@ -15,8 +16,10 @@ export const NoteList = memo(() => {
   const noteListRef = useRef<HTMLDivElement>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { loadMore, isLoading, hasMore, error } = useNotesData();
-  const saveNotes = useSaveNotes(s => s.saveNotes);
   useSaveNotesData();
+  const saveNotes = useSaveNotes(s => s.saveNotes);
+  useSharedNotesData();
+  const sharedNotes = useSharedNotes(s => s.sharedNotes);
 
   const sortedNotes = useMemo(() => {
     return Object.values(notes).sort(
@@ -26,6 +29,7 @@ export const NoteList = memo(() => {
 
   let noteList = sortedNotes;
   if (Array.isArray(saveNotes) && activeTab == 'save') noteList = saveNotes;
+  if (activeTab == 'shared') noteList = sharedNotes;
 
   let savedNoteId = localStorage.getItem("focusNoteId") || "";
   if (!notes[savedNoteId]) savedNoteId = noteList[0]?.id;

@@ -1,9 +1,10 @@
 import useSWRInfinite from 'swr/infinite'
-import { FetchNoteId, FetchNotes } from '@/api/note.api'
+import { FetchNoteId, FetchNotes, GetSharedNotes } from '@/api/note.api'
 import useNotes from '@/hooks/useNotes'
 import config from '@/app.config'
 import useSWR from 'swr'
 import useSaveNotes from '@/hooks/useSaveNotes'
+import useSharedNotes from '@/hooks/useSharedNote'
 
 export default function useNotesData() {
   const page_size = config.PAGE_SIZE;
@@ -42,6 +43,24 @@ export function useSaveNotesData() {
   return { saveNotes: data, mutateSaveNote: mutate, error, isLoading }
 }
 
+export function useSharedNotesData() {
+  const key = '/api/notes-shared';
+  const { data, mutate, error, isLoading } = useSWR(key, GetSharedNotes,
+    {
+      onSuccess: (notes) => {
+        let noteArr: any = []
+        notes.map(n => {
+          noteArr.push(n.note)
+        })
+        useSharedNotes.getState().setSharedNotes(noteArr);
+        useNotes.getState().mergeNotes(noteArr)
+      },
+      revalidateOnFocus: true,
+    })
+
+  return { saveNotes: data, mutateSaveNote: mutate, error, isLoading }
+}
+
 export function useSearchNoteData(keyword: string) {
   const key = keyword ? `/api/notes?search=${keyword}` : null;
   const { data, error, mutate, isLoading } = useSWR(key, FetchNotes)
@@ -60,3 +79,4 @@ export function useNoteId(id: string) {
 
   return { note: data, mutateNoteId: mutate, error, isLoading }
 }
+

@@ -23,6 +23,10 @@ type NoteMetaData = {
   content: string;
   user_id: string;
   is_save: boolean;
+  user: {
+    id: string;
+    name: string;
+  }
   created_at: string;
   updated_at: string;
   note_shares: note_shares[] | [];
@@ -71,4 +75,14 @@ interface ShareNoteResponse {
   note: NoteMetaData;
 }
 
-export type { User, Note, NotesMap, SaveNoteParams, PaginationResponse, NoteMetaData, ShareNoteResponse, note_shares };
+interface GetSharedNotesResponse {
+  id: string;
+  user_id: string;
+  note_id: string;
+  created_at: string;
+  updated_at: string;
+  note: Note[];
+}
+
+
+export type { User, Note, NotesMap, SaveNoteParams, PaginationResponse, NoteMetaData, ShareNoteResponse, GetSharedNotesResponse };
