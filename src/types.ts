@@ -26,6 +26,13 @@ type NoteMetaData = {
   user: {
     id: string;
     name: string;
+  };
+  latest_version: {
+    id:string;
+    version: string;
+    created_at: string;
+    note_id: string;
+    changes: string;
   }
   created_at: string;
   updated_at: string;
