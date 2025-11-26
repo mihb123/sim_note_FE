@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, createElement } from "react";
+import { useEffect, useState, useRef, createElement, useCallback } from "react";
 import { EditorView, basicSetup } from "codemirror";
 import { EditorState, Compartment } from "@codemirror/state";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
@@ -16,6 +16,7 @@ import { LivePreview } from "@/components/editor/Preview";
 import toggleBold from "@/components/editor/boldCommand";
 import { PreviewPlugin } from "@/components/editor/PreviewPlugin";
 import toggleItalic from "@/components/editor/italicCommand";
+import { useCollabExtension } from '@/hooks/useCollab';
 
 export interface EditorInfo {
   words: number;
@@ -25,31 +26,28 @@ export interface EditorInfo {
 
 interface UseEditorProps {
   initialContent: string;
-  onDocChange: (doc: string) => void;
+  setCurrentDoc: (doc: string) => void;
 }
 
-export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
+export const useEditor = ({ initialContent, setCurrentDoc }: UseEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const setEditorView = useFocusNote(state => state.setEditorView);
   const view = useFocusNote(state => state.view);
   const [info, setInfo] = useState<EditorInfo>({ words: 0, lines: 0, chars: 0 });
-  const onDocChangeRef = useRef(onDocChange);
   const { theme } = useTheme();
   const themeCompartment = useRef(new Compartment());
+  const focusNote = useFocusNote(state => state.focusNote);
 
-  // keep latest callback reference without triggering effect
-  useEffect(() => {
-    onDocChangeRef.current = onDocChange;
-  }, [onDocChange]);
-
-  const updateInfo = (text: string) => {
+  const updateInfo = useCallback((text: string) => {
     setInfo({
       lines: text.split("\n").length,
       words: text.trim().split(/\s+/).filter(Boolean).length,
       chars: text.length,
     });
-  };
+  }, []);
 
+  if (!view?.hasFocus) view?.focus()
+  
   useEffect(() => {
     if (view) {
       view.dispatch({
@@ -59,12 +57,12 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
   }, [theme, view])
 
   useEffect(() => {
-    if (!editorRef.current || view) return;
+    if (!editorRef.current) return;
 
     const updateListener = EditorView.updateListener.of((update) => {
       if (update.docChanged) {
         const text = update.state.doc.toString();
-        onDocChangeRef.current(text);
+        setCurrentDoc(text);
         updateInfo(text);
       }
     });
@@ -90,6 +88,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       }, 0);
       return true;
     }
+    const collabExtensions = useCollabExtension(focusNote);
 
     const state = EditorState.create({
       doc: initialContent,
@@ -106,7 +105,7 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
         { key: "Alt-i", run: toggleItalic }
         ]),
         LivePreview,
-        PreviewPlugin,
+        PreviewPlugin, collabExtensions
       ],
     });
 
@@ -114,18 +113,16 @@ export const useEditor = ({ initialContent, onDocChange }: UseEditorProps) => {
       state,
       parent: editorRef.current,
     });
-
-    // Log all active keymaps from the editor state
-    // This inspects the keymap facet which collects keybindings from all extensions
+    
+    updateInfo(initialContent);
     // console.log("Active keymaps:", (state.facet(keymap) as any[]).flat());
 
     setEditorView(editorView);
-    console.log("Editor initialized")
     return () => {
       editorView.destroy();
       setEditorView(null);
     };
-  }, []);
+  }, [initialContent]);
 
-  return { editorRef, view, info, updateInfo };
+  return { editorRef, info };
 };

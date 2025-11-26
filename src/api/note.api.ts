@@ -93,3 +93,21 @@ export const GetSharedNotes = async (): Promise<GetSharedNotesResponse[]> => {
     throw error;
   }
 }
+
+export const PushChanges = async (noteId: string, data: any): Promise<any> => {
+  try {
+    const response = await api.post<any>(`/api/notes/${noteId}/document-update`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating document:', error);
+  }
+}
+
+export const PullChanges = async (noteId: string, version: number): Promise<any> => {
+  try {
+    const response = await api.get<any>(`/api/notes/${noteId}/document/${version}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error pulling changes:', error);
+  }
+}
